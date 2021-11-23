@@ -1,0 +1,12 @@
+<p [class]="headerClass">{{title}} пустеет, милорд!</p>
+<p>У нас осталось всего {{currentGold+7}} золотых..</p>
+
+<p [style.color]="styleColor">К вам пришел посетитель. Это {{visitor.status + ' ' + visitor.name  + ' из города '}} {{visitor.house ?? "соседнего"}}. </p>
+<p>Он просит {{randomGoldValue}} золота чтобы купить зерно {{randomGrainValue}} пудов.</p>
+<p (click)="sirDecisionStyle='green'" [style.color]="sirDecisionStyle">Выдать</p>
+<p (click)="changeColor('red')" [style.color]="sirDecisionStyle">Выгнать</p>
+<input type='text' (input)="getInputValue($event)">
+<input type='text' (keydown.enter)="getInputValue($event)">
+<p></p>
+<input #inputBtn type="text">
+<button (click)="changeColor(inputBtn.value)">Меняем цвет</button>

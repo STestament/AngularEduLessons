@@ -1,0 +1,23 @@
+div.selectedEdict {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    font-size: 14px;
+    width: 700px;
+    background-color: gold;
+}
+div.itemEdict {
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
+    font-size: 14px;
+    width: 700px;
+    background-color: rgb(214, 252, 233);
+}
+
+.itemEdict {
+    background-color: rgb(254, 255, 187);
+}
+.itemEdictSelected {
+    background-color: rgb(198, 201, 17);
+}

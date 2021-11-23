@@ -1,0 +1,11 @@
+<div style="margin-left: 50px; font-weight: bold;"><p>Королевские указы для короля Ангуляра</p></div>
+<div *ngFor="let edict of edicts" [ngClass]="getEdictToSetClass(edict)">
+    <input type="checkbox" (change)="selectEdict($event, edict)"/>{{edict.header}}
+    <p>{{edict.description}}</p>
+    <div *ngIf="getStateOfEdict(edict.state)">
+        <p [style.color]="styleColor">{{'Время на выполнение: ' + edict.dayOfComplete}}</p>
+    </div>    
+</div>
+
+
+
