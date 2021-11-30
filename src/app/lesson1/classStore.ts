@@ -3,7 +3,7 @@ export type edictItem = {
     header: string,
     description: string,
     dayOfComplete: number,
-    state: boolean
+    isSelectEdictState: boolean
     peopleRequests?: peopleRequest[];
 }
 

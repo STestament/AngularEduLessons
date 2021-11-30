@@ -10,14 +10,11 @@ import { edictItem } from '../classStore';
 export class EdictTemplateComponent implements OnInit {
   @Input("indexEdictData") indexEdict!: number;
   @Input("stateEdictData") stateEdictTemplate!: boolean;
+  @Input("edictTemplateData") editTemplateEdictItem!: edictItem;
   @Output() addEdictToList: EventEmitter<edictItem> = new EventEmitter();
   constructor() { }
 
   ngOnInit(): void {
-  }
-
-  addEdict(edict: edictItem) {
-    return edict;
   }
 
   addNewEdict(newHeader: string, newDescription: string, newDays: string) {
@@ -25,8 +22,8 @@ export class EdictTemplateComponent implements OnInit {
       id: this.indexEdict,
       header: newHeader,
       description: newDescription,
-      dayOfComplete: 1,
-      state: false
+      dayOfComplete: +newDays,
+      isSelectEdictState: false
     }
     this.addEdictToList.emit(newEdict);
   }

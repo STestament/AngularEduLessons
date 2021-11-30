@@ -1,9 +1,9 @@
 <div style="border: 1px solid red; width: 400px; margin: 10px; padding: 10px;" *ngIf="indexEdict > -1">
     <span>Добавить указ</span>
     <div>
-        <div>Указ: <input #newHeader type="text"></div>
-        <div>Описание<input #newDescription type="text"></div>
-        <div>Кол-во дней: <input #newDays type="text"></div>
+        <div>Указ: <input #newHeader type="text" [value]='editTemplateEdictItem.header'></div>
+        <div>Описание<input #newDescription type="text" [value]='editTemplateEdictItem.description'></div>
+        <div>Кол-во дней: <input #newDays type="text" [value]='editTemplateEdictItem.dayOfComplete'></div>
     </div> 
     <input type="button" [value]="stateEdictTemplate ? 'Редактировать' : 'Добавить'" style="margin-right: 10px;" 
         (click)="addNewEdict(newHeader.value, newDescription.value, newDays.value)" />

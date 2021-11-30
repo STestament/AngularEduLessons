@@ -1,10 +1,10 @@
-<div [ngClass]="getEdictToSetClass(singleEdict)">
+<div [ngClass]="singleEdict.isSelectEdictState ? 'selectedEdict' : 'itemEdict'">
     <input type="checkbox" (change)="selectEdict($event, singleEdict)" style="margin-right: 10px;"/>{{singleEdict.header}}
     <p>{{singleEdict.description}}</p>
-    <div *ngIf="getStateOfEdict(singleEdict.state)">
+    <div *ngIf="singleEdict.isSelectEdictState">
         <p [style.color]="styleColor">{{'Время на выполнение: ' + singleEdict.dayOfComplete}}</p>
     </div> 
-    <input type="button" value="Принять к исполнению" (click)="editEdict(singleEdict)" style="margin-right: 10px;" />
-    <input type="button" value="Отклонить указ" (click)="removeEdict(singleEdict)"
-        style="margin-right: 10px;" [disabled]="singleEdict.state ? false : true"/>   
+    <input type="button" value="Принять к исполнению" (click)="editEdict()" style="margin-right: 10px;" />
+    <input type="button" value="Отклонить указ" (click)="removeEdict()"
+        style="margin-right: 10px;" [disabled]="singleEdict.isSelectEdictState ? false : true"/>   
 </div>

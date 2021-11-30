@@ -20,26 +20,20 @@ export class EdictComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  getEdictToSetClass(edictItem: edictItem)
-  {
-    return edictItem.state ? "selectedEdict" : 'itemEdict';
-  }
   selectEdict($event: Event, edictItem: edictItem)
   {
-    edictItem.state = ($event.target as HTMLInputElement).checked;
+    edictItem.isSelectEdictState = ($event.target as HTMLInputElement).checked;
   }
-  getStateOfEdict(edictState: boolean) 
+  editEdict()
   {
-    return edictState;
+    this.editEdictInList.emit();
   }
-  editEdict(edictItem: edictItem)
+  removeEdict()
   {
-    this.editEdictInList.emit(edictItem);
+    this.removeEdictFromList.emit();
   }
-  removeEdict(edictItem: edictItem)
-  {
-    this.removeEdictFromList.emit(edictItem);
-  }
+
+  //--
 
   ngDoCheck(): void {
     console.log('Child Component ngDoCheck');
