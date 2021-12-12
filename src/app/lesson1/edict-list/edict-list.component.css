@@ -1,0 +1,17 @@
+.listOfEdict {
+    border: 1px solid green;
+    margin-top: 10px;
+    width: 750px;
+    background-color: beige;
+    display: inline-block;
+}
+.templateItem {
+    margin-top: 10px;
+    padding: 10px;
+    width: 450px;
+    background-color: beige;
+    display: inline-block;
+    margin-left: 10px;
+    border: 1px solid red; 
+    float: right;
+}

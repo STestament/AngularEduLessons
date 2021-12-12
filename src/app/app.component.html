@@ -1,8 +1,72 @@
-<ng-container *ngIf="false">
-  <app-header *ngFor="let item of [1]"></app-header>
-</ng-container>
-<app-footer *ngIf="false"></app-footer>
-
+<!-- MAIN LESSON -->
 <ng-container *ngIf="true">
   <app-lesson1></app-lesson1>
 </ng-container>
+
+
+
+<!-- TEST-PART-->
+
+<!-- <ng-container #containerTemp></ng-container>
+
+<app-lesson3ch #contextMenuComponent></app-lesson3ch>
+<button (click)="onShowButtonClick()">Enable Menu</button>
+<h1 #title style="background: yellowgreen;">New Title</h1>
+<button (click)="onChangeColor()">Change color</button>
+
+<ng-template #titleTemp>
+  <h1 #title style="background: red;">New Title Temp</h1>
+</ng-template>
+<button (click)="onShowTemplate()">Build temp</button>
+
+<div style="background-color: teal; margin-top: 30px;">
+  <app-lesson3p *ngFor="let item of [1,2,3]"></app-lesson3p>
+  <button (click)="onShowParentTemplate()">Show Console</button>
+</div> -->
+
+
+<!--<div *ngIf="isLoad; else loading">
+  <app-lesson3ch></app-lesson3ch>
+</div> -->
+
+<!-- <div *ngIf="isLoad">
+  <app-lesson3ch></app-lesson3ch>
+</div> -->
+
+<!-- <app-lesson3p>
+  <app-lesson3ch></app-lesson3ch>
+</app-lesson3p>
+
+<ng-container *ngTemplateOutlet="loading; context: {text: '1-data'}"></ng-container>
+<ng-container *ngTemplateOutlet="loading; context: {text: '2-data'}"></ng-container>
+
+<ng-template #loading let-text="text">
+  <div>Load..{{text}}</div>
+</ng-template>-->
+
+
+<!-- <ng-container *ngIf="false">
+  <app-header *ngFor="let item of [1]"></app-header>
+  <app-footer *ngIf="false"></app-footer>
+</ng-container>
+
+<ng-container *ngIf="false">
+  <app-lesson1></app-lesson1>
+</ng-container>
+
+<ng-container *ngIf="false">
+  <app-lesson3p>Content P</app-lesson3p>
+</ng-container>
+<ng-container *ngIf="false">
+  <app-lesson3ch>Content Ch</app-lesson3ch>
+</ng-container>
+
+<app-lesson3p>
+  <div ngProjectAs="app-lesson3ch">New Lesson 3</div>
+  <ng-container ngProjectAs="app-lesson3ch">
+    <app-lesson3ch></app-lesson3ch>
+    <app-lesson3ch></app-lesson3ch>
+    <app-lesson3ch></app-lesson3ch>
+  </ng-container>  
+</app-lesson3p> -->
+

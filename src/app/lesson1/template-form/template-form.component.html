@@ -1,0 +1,7 @@
+<div class="templateElement" *ngIf="isVisibleTemplate">
+    <span>{{titleTemplate}}</span>
+    <button class="templateCloseButton" (click)="closeTemplate()" >X</button>
+    <div class="contentData"> 
+        <ng-content></ng-content>
+    </div>    
+</div> 

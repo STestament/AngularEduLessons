@@ -1,0 +1,31 @@
+<div>    
+    <div class="buttonsArea">
+        <input type="button" value="Добавить указ" style="margin-left: 10px;" 
+            (click)="openTemplateForAddNewEdict()">
+        <input type="button" value="Удалить указ" style="margin-left: 10px;" 
+            [disabled] = "!isAnyEdictSelected" 
+            (click)="deleteAllSelectedEdict()">
+    </div>
+    <div class="listOfEdict">
+        <app-edict *ngFor="let edict of edicts" #edict
+            [singleEdictData]="edict" 
+            (contextmenu)="openInnerMenu($event)"
+            (click)="closeInnerMenu()"
+            (removeEdictFromList)="removeEdictFromList(edict)" 
+            (sendTemplateForEdit)="openTemplateForEdit(edict)"
+            (setSelectState)="selectEdict()">
+        </app-edict>    
+    </div>        
+    <div class="templateItem">   
+        <app-template-form #templateForm>
+            <app-edict-template 
+                [edictTemplateData]="templateEdictItem" 
+                (sendEdictToSave)="saveEdictToList($event)" 
+                (setDefaultDataAndClose)="setDefaultDataAndCloseTemplate()">                
+            </app-edict-template>
+        </app-template-form>
+    </div>
+    <app-inner-menu *ngIf="isVisibleInnerMenu" [x]="xMenu" [y]="yMenu" 
+        (selectAllEdict)="selectAllEdict()">
+    </app-inner-menu>
+</div>

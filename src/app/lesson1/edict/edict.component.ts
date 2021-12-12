@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { edictItem } from '../classStore';
 
 @Component({
@@ -8,40 +8,43 @@ import { edictItem } from '../classStore';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-
 export class EdictComponent implements OnInit {
   @Input("singleEdictData") singleEdict!: edictItem;
   @Output() removeEdictFromList: EventEmitter<edictItem> = new EventEmitter();
-  @Output() editEdictInList: EventEmitter<edictItem> = new EventEmitter();
-  constructor() { }
+  @Output() sendTemplateForEdit: EventEmitter<edictItem> = new EventEmitter();
+  @Output() setSelectState: EventEmitter<edictItem> = new EventEmitter();
 
+  constructor(private cdr: ChangeDetectorRef) { }
   public styleColor: string = "green"; 
 
   ngOnInit(): void {
   }
 
+  checkEdict()
+  {
+    this.cdr.markForCheck();
+  }
   selectEdict($event: Event, edictItem: edictItem)
   {
     edictItem.isSelectEdictState = ($event.target as HTMLInputElement).checked;
+    this.setSelectState.emit(edictItem);
   }
   editEdict()
   {
-    this.editEdictInList.emit();
+    this.sendTemplateForEdit.emit();
   }
   removeEdict()
   {
     this.removeEdictFromList.emit();
   }
-
-  //--
-
+  //
   ngDoCheck(): void {
-    console.log('Child Component ngDoCheck');
+    console.log('edict ngDoCheck');
   } 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('Child Component ngOnChanges');
+    console.log('edict ngOnChanges');
   }
   ngOnDestroy(): void {
-    console.log('Child Component ngOnDestroy');
+    console.log('edict ngOnDestroy');
   }
 }

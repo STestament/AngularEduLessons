@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { edictItem } from '../classStore';
+import { edictItem, executedPerson } from '../classStore';
 
 @Component({
   selector: 'app-edict-template',
@@ -8,23 +8,36 @@ import { edictItem } from '../classStore';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EdictTemplateComponent implements OnInit {
-  @Input("indexEdictData") indexEdict!: number;
-  @Input("stateEdictData") stateEdictTemplate!: boolean;
-  @Input("edictTemplateData") editTemplateEdictItem!: edictItem;
-  @Output() addEdictToList: EventEmitter<edictItem> = new EventEmitter();
+  @Input("edictTemplateData") templateEdictData!: edictItem;
+  @Output() sendEdictToSave: EventEmitter<edictItem> = new EventEmitter();
+  @Output() setDefaultDataAndClose: EventEmitter<void> = new EventEmitter();
+  isVisibleTemplate: boolean = true;
   constructor() { }
-
   ngOnInit(): void {
-  }
 
-  addNewEdict(newHeader: string, newDescription: string, newDays: string) {
-    let newEdict: edictItem = {
-      id: this.indexEdict,
-      header: newHeader,
-      description: newDescription,
-      dayOfComplete: +newDays,
-      isSelectEdictState: false
-    }
-    this.addEdictToList.emit(newEdict);
+  }  
+  // Действия кнопок
+  closeTemplate() {
+    this.isVisibleTemplate = false;
+    this.setDefaultDataAndClose.emit();
+  }
+  saveTemplate() {
+    this.sendEdictToSave.emit(this.templateEdictData);
+  }
+  // Установка значений
+  public changeHeader = (value: string) => { 
+    this.templateEdictData.header = value; 
+  }
+  public changeDescription = (value: string) => { 
+    this.templateEdictData.description = value; 
+  }
+  public changeDays = (value: string) => { 
+    this.templateEdictData.dayOfComplete = +value; 
+  }
+  public changeDate = (value: string) => { 
+    this.templateEdictData.dateCreate = new Date(value); 
+  }
+  public selectExecutor(executor: string) {
+    this.templateEdictData.executedPerson = executor as executedPerson;
   }
 }

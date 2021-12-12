@@ -1,0 +1,13 @@
+.templateElement1 {    
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    border: 1px solid red; 
+    background-color: bisque;
+    width: 300px; height: 300px;
+    margin: 10px; 
+    padding: 10px;
+}
+.inputElement {
+    margin-top: 5px;
+}

@@ -7,6 +7,11 @@ import { FooterComponent } from './footer/footer.component';
 import { Lesson1Component } from './lesson1/lesson1.component';
 import { EdictComponent } from './lesson1/edict/edict.component';
 import { EdictTemplateComponent } from './lesson1/edict-template/edict-template.component';
+import { Lesson3pComponent } from './lesson3p/lesson3p.component';
+import { Lesson3chComponent } from './lesson3ch/lesson3ch.component';
+import { EdictListComponent } from './lesson1/edict-list/edict-list.component';
+import { TemplateFormComponent } from './lesson1/template-form/template-form.component';
+import { InnerMenuComponent } from './lesson1/inner-menu/inner-menu.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +20,12 @@ import { EdictTemplateComponent } from './lesson1/edict-template/edict-template.
     FooterComponent,
     Lesson1Component,
     EdictComponent,
-    EdictTemplateComponent
+    EdictTemplateComponent,
+    Lesson3pComponent,
+    Lesson3chComponent,
+    EdictListComponent,
+    TemplateFormComponent,
+    InnerMenuComponent
   ],
   imports: [
     BrowserModule
