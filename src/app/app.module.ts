@@ -12,6 +12,14 @@ import { Lesson3chComponent } from './lesson3ch/lesson3ch.component';
 import { EdictListComponent } from './lesson1/edict-list/edict-list.component';
 import { TemplateFormComponent } from './lesson1/template-form/template-form.component';
 import { InnerMenuComponent } from './lesson1/inner-menu/inner-menu.component';
+import { StylesDirective } from './styles.directive';
+import { StructDDirective } from './struct-d.directive';
+import { GenPipePipe } from './gen-pipe.pipe';
+import { FilterManPipe } from './filter-man.pipe';
+import { UppercasetitlePipePipe } from './uppercasetitle-pipe.pipe';
+import { ExecutorTypePipePipe } from './executor-type-pipe.pipe';
+import { StyleTypeDirective } from './style-type.directive';
+import { UserPermissionDirective } from './user-permission.directive';
 
 @NgModule({
   declarations: [
@@ -25,7 +33,15 @@ import { InnerMenuComponent } from './lesson1/inner-menu/inner-menu.component';
     Lesson3chComponent,
     EdictListComponent,
     TemplateFormComponent,
-    InnerMenuComponent
+    InnerMenuComponent,
+    StylesDirective,
+    StructDDirective,
+    GenPipePipe,
+    FilterManPipe,
+    UppercasetitlePipePipe,
+    ExecutorTypePipePipe,
+    StyleTypeDirective,
+    UserPermissionDirective
   ],
   imports: [
     BrowserModule
