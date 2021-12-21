@@ -5,7 +5,7 @@ export type edictItem = {
     dayOfComplete: number,
     isSelectEdictState: boolean,
     dateCreate?: Date,
-    executedPerson?: string,
+    executedPerson: string,
     peopleRequests?: peopleRequest[];
 }
 

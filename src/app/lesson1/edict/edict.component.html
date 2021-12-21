@@ -2,12 +2,13 @@
     <input type="checkbox"  style="margin-right: 10px;"
         [checked]="singleEdict.isSelectEdictState"
         (change)="selectEdict($event, singleEdict)" />{{singleEdict.header}}
+        <div class="iconType" [appStyleType]="singleEdict.executedPerson" title="{{singleEdict.executedPerson}}">{{singleEdict | executorTypePipe}}</div>
     <p>{{singleEdict.description}}</p>
     <div *ngIf="singleEdict.isSelectEdictState">
-        <p [style.color]="styleColor">{{'Дата создания указа: ' + singleEdict.dateCreate}}</p>
+        <p [style.color]="styleColor">{{'Дата создания указа: ' + singleEdict.dateCreate | date: "dd.MM.yyyy"}}</p>
         <p [style.color]="styleColor">{{'Время на выполнение: ' + singleEdict.dayOfComplete}}</p>
         <p [style.color]="styleColor">{{'Исполнитель: ' + singleEdict.executedPerson}}</p>
-    </div> 
+    </div>       
     <input type="button" value="Принять к исполнению"  style="margin-right: 10px;" 
         (click)="editEdict()"/>
     <input type="button" value="Отклонить указ" style="margin-right: 10px;"

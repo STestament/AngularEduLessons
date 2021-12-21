@@ -21,3 +21,10 @@ div.itemEdict {
 .itemEdictSelected {
     background-color: rgb(198, 201, 17);
 }
+.iconType {
+    position: relative;
+    display: inline-block;
+    padding: 2px;
+    margin: 5px;
+    background-color: goldenrod;
+}

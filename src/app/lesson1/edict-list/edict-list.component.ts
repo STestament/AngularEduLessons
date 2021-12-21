@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { edictItem, executedPerson } from '../classStore';
+import { UserType, king, citizen } from '../../users';
 import { EdictTemplateComponent } from '../edict-template/edict-template.component';
 import { EdictComponent } from '../edict/edict.component';
 import { TemplateFormComponent } from '../template-form/template-form.component';
@@ -12,6 +13,9 @@ import { TemplateFormComponent } from '../template-form/template-form.component'
 export class EdictListComponent implements OnInit {
   @ViewChild("templateForm") templateForm!: TemplateFormComponent;
   @ViewChildren("edict") edictList!:QueryList<EdictComponent>
+  //
+  private login: UserType = king;
+  public loginName: string = "Король";
   // 
   public stateIndex: number = -1;
   public isEditState: boolean = false;
@@ -49,6 +53,12 @@ export class EdictListComponent implements OnInit {
 
   }
 
+  // Установка пользователя
+  setKingLogin(isKing: boolean) {
+    this.login = isKing ? king : citizen;
+    this.loginName = isKing ? "Король" : "Горожанин";
+  };
+  //
   setDefaultTemplateData() {
     this.templateEdictItem = {
       id: -1, 

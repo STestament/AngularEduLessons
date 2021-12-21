@@ -10,15 +10,24 @@
     </ng-template>
     <ng-template #radioButtonElement let-executorItem="executor">
         <label>Исполнитель:</label>
-        <div><input type="radio" name="executorType" (click)="selectExecutor('Градостроитель')" [checked]="executorItem == 'Градостроитель'" />Градостроитель</div>
-        <div><input type="radio" name="executorType" (click)="selectExecutor('Военачальник')" [checked]="executorItem == 'Военачальник'" />Военачальник</div>
-        <div><input type="radio" name="executorType" (click)="selectExecutor('Советник')" [checked]="executorItem == 'Советник'" />Советник</div>
-        <div><input type="radio" name="executorType" (click)="selectExecutor('Шпион')" [checked]="executorItem == 'Шпион'" />Шпион</div>
-        <div><input type="radio" name="executorType" (click)="selectExecutor('Не назначен')" [checked]="executorItem == 'Не назначен'" />Не назначен</div>
+        <div><input type="radio" name="executorType" (click)="selectExecutor('Градостроитель')" [checked]="executorItem == 'Градостроитель'" />
+            <span [appStyleType]="'Градостроитель'" >[-]</span> Градостроитель
+        </div>
+        <div><input type="radio" name="executorType" (click)="selectExecutor('Военачальник')" [checked]="executorItem == 'Военачальник'" />
+            <span [appStyleType]="'Военачальник'" >[-]</span> Военачальник
+        </div>
+        <div><input type="radio" name="executorType" (click)="selectExecutor('Советник')" [checked]="executorItem == 'Советник'" />
+            <span [appStyleType]="'Советник'" >[-]</span> Советник
+        </div>
+        <div><input type="radio" name="executorType" (click)="selectExecutor('Шпион')" [checked]="executorItem == 'Шпион'" />
+            <span [appStyleType]="'Шпион'" >[-]</span> Шпион
+        </div>
+        <div><input type="radio" name="executorType" (click)="selectExecutor('Не назначен')" [checked]="executorItem == 'Не назначен'" />
+            <span [appStyleType]="'Не назначен'" >[-]</span> Не назначен
+        </div>
     </ng-template>
 </div>
 <div>
-    <input type="button" [value]="'Сохранить'" style="margin-right: 10px;" (click)="saveTemplate()" />
+    <input *appUserPermission type="button" [value]="'Сохранить'" style="margin-right: 10px;" (click)="saveTemplate()" />
     <input type="button" [value]="'Отменить'" style="margin-right: 10px;" (click)="closeTemplate()" /> 
-    <input type="date" value="2020-11-30" />
 </div>
