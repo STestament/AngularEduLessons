@@ -1,9 +1,12 @@
-import { Component, ElementRef, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { edictItem, executedPerson } from '../classStore';
 import { UserType, king, citizen } from '../../users';
 import { EdictTemplateComponent } from '../edict-template/edict-template.component';
 import { EdictComponent } from '../edict/edict.component';
 import { TemplateFormComponent } from '../template-form/template-form.component';
+import { EdictsService } from 'src/app/lessonServices/edicts.service';
+import { UsersService } from 'src/app/lessonServices/users.service';
+
 
 @Component({
   selector: 'app-edict-list',
@@ -15,7 +18,7 @@ export class EdictListComponent implements OnInit {
   @ViewChildren("edict") edictList!:QueryList<EdictComponent>
   //
   private login: UserType = king;
-  public loginName: string = "Король";
+  public loginName: string = "Не авторизован";
   // 
   public stateIndex: number = -1;
   public isEditState: boolean = false;
@@ -25,38 +28,51 @@ export class EdictListComponent implements OnInit {
   public xMenu = 0;
   public yMenu = 0;
   // Данные
-  public edicts: edictItem[] = 
-  [
-      { id: 1, header: "Повысить налоги", description: "Мы вынуждены повысить налоги. В ближайшие пару месяцев сбор увеличится на 10%", dayOfComplete: 60, 
-        isSelectEdictState: false, dateCreate: new Date(), executedPerson: executedPerson.Advisor },
-      { id: 2, header: "Построить город", description: "Нам нужен новый торговый центр - мы заложим новый город на границе королевства", dayOfComplete: 300, 
-        isSelectEdictState: false, dateCreate: new Date(), executedPerson: executedPerson.CityBuilder },
-      { id: 3, header: "Собрать армию", description: "На нас нападают варвары! Собрать войско со всех земель!", dayOfComplete: 30, 
-        isSelectEdictState: false, dateCreate: new Date(), executedPerson: executedPerson.WarChief },
-      { id: 4, header: "Устроить пир", description: "Устраиваем пир в честь заключения мирного договора", dayOfComplete: 20, 
-        isSelectEdictState: false, dateCreate: new Date(), executedPerson: executedPerson.Advisor },
-      { id: 5, header: "Устроить турнир", description: "Созвать всех рыцарей! Награда - сундук золота", dayOfComplete: 50, 
-        isSelectEdictState: false, dateCreate: new Date(), executedPerson: executedPerson.Advisor },
-  ];  
+  public edicts: edictItem[] = [];
   public templateEdictItem: edictItem = {
     id: this.stateIndex, 
     header: "", 
     description: "", 
     dayOfComplete: 10, 
     isSelectEdictState: false,
-    dateCreate: new Date(),
     executedPerson: executedPerson.Unassigned
   }
 
-  constructor() { }
+  constructor(private edictService: EdictsService, 
+              private usersService: UsersService, 
+              private cdr: ChangeDetectorRef) { 
+    this.edictService.getEdicts().pipe().subscribe({
+      next: (data) => {
+        this.edicts = data;
+        this.cdr.markForCheck();
+      },
+      error: (e) => { console.log(e.message); },
+      complete: () => { console.log('Success Data'); } 
+    });
+    // this.usersService.getUser(false).pipe().subscribe({
+    //   next: (userData) => {
+    //     this.login = userData;
+    //     this.loginName = userData.login;
+    //   },
+    //   error: (e) => { console.log(e.message); },
+    //   complete: () => { console.log('Success User'); } 
+    // });
+  }
+
   ngOnInit(): void {
 
   }
 
   // Установка пользователя
   setKingLogin(isKing: boolean) {
-    this.login = isKing ? king : citizen;
-    this.loginName = isKing ? "Король" : "Горожанин";
+    this.usersService.getUser(isKing).pipe().subscribe({
+      next: (userData) => {
+        this.login = userData;
+        this.loginName = userData.login;
+      },
+      error: (e) => { console.log(e.message); },
+      complete: () => { console.log('Success User'); } 
+    });
   };
   //
   setDefaultTemplateData() {
@@ -66,7 +82,6 @@ export class EdictListComponent implements OnInit {
       description: "", 
       dayOfComplete: 10, 
       isSelectEdictState: false,
-      dateCreate: new Date(),
       executedPerson: executedPerson.Unassigned
     }
   }
@@ -80,7 +95,7 @@ export class EdictListComponent implements OnInit {
     });
   }
   // Работа с модальной формой  
-  openTemplateForEdit(edict: edictItem) { // openTemplateForEdit
+  openTemplateForEdit(edict: edictItem) {
     this.templateForm.showTemplateForm(true, "Изменить указ");
     this.templateEdictItem = {
       id: edict.id, 
@@ -88,7 +103,6 @@ export class EdictListComponent implements OnInit {
       description: edict.description, 
       dayOfComplete: edict.dayOfComplete, 
       isSelectEdictState: false,
-      dateCreate: edict.dateCreate,
       executedPerson: edict.executedPerson
     }
   }
@@ -130,21 +144,24 @@ export class EdictListComponent implements OnInit {
   saveEdictToList($event: edictItem) {
     let edict = this.edicts.find(item => item.id == $event.id);
     if (edict) {
-      alert("Исправлен указ: " + edict.header);
-      let indexItem = this.edicts.indexOf(edict);
-      this.edicts[indexItem] = $event;
+      this.edictService.updateEdict($event);
+      //alert("Исправлен указ: " + edict.header);
+      //let indexItem = this.edicts.indexOf(edict);
+      //this.edicts[indexItem] = $event;
     } else {
-      alert("Добавлен указ: " + $event.header);
-      this.edicts.push($event);
+      this.edictService.addEdict($event);
+      //alert("Добавлен указ: " + $event.header);
+      //this.edicts.push($event);
     }
     this.templateForm.closeTemplate();
     this.edictList.forEach(x => x.checkEdict());
     this.setDefaultTemplateData();
   }  
   removeEdictFromList(edict: edictItem) {
-    alert("Удален указ: " + edict.header);
-    let indexOfRemovedEdict = this.edicts.indexOf(edict);
-    this.edicts.splice(indexOfRemovedEdict, 1); 
+    this.edictService.removeEdict(edict);
+    // alert("Удален указ: " + edict.header);
+    // let indexOfRemovedEdict = this.edicts.indexOf(edict);
+    // this.edicts.splice(indexOfRemovedEdict, 1); 
   }
   deleteAllSelectedEdict() {
     let renewEdictList: edictItem[] = [];
@@ -153,7 +170,8 @@ export class EdictListComponent implements OnInit {
         renewEdictList.push(edict);
       }
     });
-    this.edicts = renewEdictList;
+    this.edictService.removeEdictAllSelectedEdict(renewEdictList);
+    // this.edicts = renewEdictList;
     this.isAnyEdictSelected = false;
   }
   // Работа с шаблоном

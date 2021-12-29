@@ -20,6 +20,7 @@ import { UppercasetitlePipePipe } from './uppercasetitle-pipe.pipe';
 import { ExecutorTypePipePipe } from './executor-type-pipe.pipe';
 import { StyleTypeDirective } from './style-type.directive';
 import { UserPermissionDirective } from './user-permission.directive';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { UserPermissionDirective } from './user-permission.directive';
     UserPermissionDirective
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

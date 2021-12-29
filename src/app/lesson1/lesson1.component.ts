@@ -14,12 +14,12 @@ export class Lesson1Component implements OnInit {
   }
   
   ngDoCheck(): void {
-    console.log('Lesson component ngDoCheck');
+    //
   } 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('Lesson component ngOnChanges');
+    //
   }
   ngOnDestroy(): void {
-    console.log('Lesson component ngOnDestroy');
+    //
   }
 }

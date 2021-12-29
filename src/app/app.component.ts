@@ -4,7 +4,6 @@ import { from } from 'rxjs/internal/observable/from';
 import { of } from 'rxjs/internal/observable/of';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { map } from 'rxjs/internal/operators/map';
-import { peopleRequest } from './lesson1/classStore';
 import { Lesson3chComponent } from './lesson3ch/lesson3ch.component';
 import { Lesson3pComponent } from './lesson3p/lesson3p.component';
 import { ObjUser } from './types';

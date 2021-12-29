@@ -10,7 +10,7 @@ export class UserPermissionDirective {
     
   }
   ngOnInit() {
-    const login = citizen;
+    const login = king;
     if (login.hasPermissions) {
        this.view.createEmbeddedView(this.template);       
     }

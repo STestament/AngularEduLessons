@@ -4,15 +4,7 @@ export type edictItem = {
     description: string,
     dayOfComplete: number,
     isSelectEdictState: boolean,
-    dateCreate?: Date,
-    executedPerson: string,
-    peopleRequests?: peopleRequest[];
-}
-
-export type peopleRequest = {
-    id: number,
-    name: string,
-    text: string,
+    executedPerson: executedPerson    
 }
 
 export enum executedPerson {

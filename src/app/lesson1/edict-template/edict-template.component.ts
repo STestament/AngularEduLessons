@@ -12,6 +12,7 @@ export class EdictTemplateComponent implements OnInit {
   @Output() sendEdictToSave: EventEmitter<edictItem> = new EventEmitter();
   @Output() setDefaultDataAndClose: EventEmitter<void> = new EventEmitter();
   isVisibleTemplate: boolean = true;
+  public execut: executedPerson = executedPerson.Unassigned;
   constructor() { }
   ngOnInit(): void {
 
@@ -34,10 +35,9 @@ export class EdictTemplateComponent implements OnInit {
   public changeDays = (value: string) => { 
     this.templateEdictData.dayOfComplete = +value; 
   }
-  public changeDate = (value: string) => { 
-    this.templateEdictData.dateCreate = new Date(value); 
-  }
   public selectExecutor(executor: string) {
+    const executorEnum = executedPerson.Unassigned;
+    this.execut = executor as executedPerson;
     this.templateEdictData.executedPerson = executor as executedPerson;
   }
 }
