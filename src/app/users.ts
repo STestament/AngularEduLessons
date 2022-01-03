@@ -1,6 +1,6 @@
-export type UserType = {
-    login: string,
-    hasPermissions: boolean
+export class UserType {
+    login: string = "None";
+    hasPermissions: boolean = false;
 }
 
 export const king: UserType = {

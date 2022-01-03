@@ -1,5 +1,5 @@
 import { Directive, HostBinding, Input } from '@angular/core';
-import { edictItem, executedPerson } from './lesson1/classStore';
+import { edictItem, executedPerson } from '../lesson1/classStore';
 
 @Directive({
   selector: '[appStyleType]'
@@ -10,7 +10,7 @@ export class StyleTypeDirective {
   constructor() { }
 
   ngOnInit() {
-    this.backgroundColor = this.setColorByExecutorType(this.itemType);
+    this.backgroundColor = this.setColorByExecutorType(this.itemType);    
   }
   setColorByExecutorType(itemType: string) {
     let colorResult = 'goldenrod';

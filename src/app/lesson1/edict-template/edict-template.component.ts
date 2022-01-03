@@ -36,8 +36,6 @@ export class EdictTemplateComponent implements OnInit {
     this.templateEdictData.dayOfComplete = +value; 
   }
   public selectExecutor(executor: string) {
-    const executorEnum = executedPerson.Unassigned;
-    this.execut = executor as executedPerson;
     this.templateEdictData.executedPerson = executor as executedPerson;
   }
 }

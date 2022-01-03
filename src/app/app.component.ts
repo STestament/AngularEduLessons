@@ -4,8 +4,6 @@ import { from } from 'rxjs/internal/observable/from';
 import { of } from 'rxjs/internal/observable/of';
 import { debounceTime } from 'rxjs/internal/operators/debounceTime';
 import { map } from 'rxjs/internal/operators/map';
-import { Lesson3chComponent } from './lesson3ch/lesson3ch.component';
-import { Lesson3pComponent } from './lesson3p/lesson3p.component';
 import { ObjUser } from './types';
 
 @Component({
@@ -27,14 +25,11 @@ export class AppComponent {
     { name: 'Sara', gender: 1 }
   ]
 
-  @ViewChild('contextMenuComponent', {read: Lesson3chComponent}) menuComponent!: Lesson3chComponent;
-  @ViewChild('contextMenuComponent', {read: ElementRef/*, static: true*/}) menuComponentTemplate!: ElementRef;
+   @ViewChild('contextMenuComponent', {read: ElementRef/*, static: true*/}) menuComponentTemplate!: ElementRef;
 
   @ViewChild('title', {read: ElementRef}) title!: ElementRef<HTMLElement>;
   @ViewChild('titleTemp') titleTemp!: TemplateRef<HTMLElement>;
   @ViewChild('containerTemp', {read: ViewContainerRef}) containerTemp!: ViewContainerRef;
-  @ViewChildren(Lesson3pComponent) parentComponent!: QueryList<Lesson3pComponent>;
-  
 
   ngOnInit(): void {
     // setTimeout(() => {
@@ -95,11 +90,11 @@ export class AppComponent {
   }
 
   onShowParentTemplate() {
-    this.parentComponent.forEach(item => {console.log(item)});
+    //this.parentComponent.forEach(item => {console.log(item)});
   }
 
   onShowButtonClick() {
-    this.menuComponent.show({top: 300, left: 300});
+    //this.menuComponent.show({top: 300, left: 300});
     console.log(this.menuComponentTemplate); 
   }
 

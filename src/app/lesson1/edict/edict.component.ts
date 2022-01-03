@@ -39,12 +39,12 @@ export class EdictComponent implements OnInit {
   }
   //
   ngDoCheck(): void {
-    console.log('edict ngDoCheck');
+    //console.log('edict ngDoCheck');
   } 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('edict ngOnChanges');
+    //console.log('edict ngOnChanges');
   }
   ngOnDestroy(): void {
-    console.log('edict ngOnDestroy');
+    //console.log('edict ngOnDestroy');
   }
 }

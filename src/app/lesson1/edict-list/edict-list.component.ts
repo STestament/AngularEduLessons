@@ -1,12 +1,9 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
 import { edictItem, executedPerson } from '../classStore';
-import { UserType, king, citizen } from '../../users';
-import { EdictTemplateComponent } from '../edict-template/edict-template.component';
 import { EdictComponent } from '../edict/edict.component';
 import { TemplateFormComponent } from '../template-form/template-form.component';
 import { EdictsService } from 'src/app/lessonServices/edicts.service';
 import { UsersService } from 'src/app/lessonServices/users.service';
-
 
 @Component({
   selector: 'app-edict-list',
@@ -17,8 +14,8 @@ export class EdictListComponent implements OnInit {
   @ViewChild("templateForm") templateForm!: TemplateFormComponent;
   @ViewChildren("edict") edictList!:QueryList<EdictComponent>
   //
-  private login: UserType = king;
-  public loginName: string = "Не авторизован";
+  public loginName: string = "";
+  public isHasPermission: boolean = false;
   // 
   public stateIndex: number = -1;
   public isEditState: boolean = false;
@@ -39,7 +36,7 @@ export class EdictListComponent implements OnInit {
   }
 
   constructor(private edictService: EdictsService, 
-              private usersService: UsersService, 
+              private userService: UsersService,
               private cdr: ChangeDetectorRef) { 
     this.edictService.getEdicts().pipe().subscribe({
       next: (data) => {
@@ -47,33 +44,18 @@ export class EdictListComponent implements OnInit {
         this.cdr.markForCheck();
       },
       error: (e) => { console.log(e.message); },
-      complete: () => { console.log('Success Data'); } 
-    });
-    // this.usersService.getUser(false).pipe().subscribe({
-    //   next: (userData) => {
-    //     this.login = userData;
-    //     this.loginName = userData.login;
-    //   },
-    //   error: (e) => { console.log(e.message); },
-    //   complete: () => { console.log('Success User'); } 
-    // });
+      complete: () => { console.log('Данные получены'); } 
+    });    
   }
 
   ngOnInit(): void {
 
   }
-
-  // Установка пользователя
-  setKingLogin(isKing: boolean) {
-    this.usersService.getUser(isKing).pipe().subscribe({
-      next: (userData) => {
-        this.login = userData;
-        this.loginName = userData.login;
-      },
-      error: (e) => { console.log(e.message); },
-      complete: () => { console.log('Success User'); } 
-    });
-  };
+  //
+  setKingLogin(login: string) {
+    this.loginName = this.userService.currentUser?.login;
+    this.cdr.markForCheck();
+  }
   //
   setDefaultTemplateData() {
     this.templateEdictItem = {
@@ -108,15 +90,7 @@ export class EdictListComponent implements OnInit {
   }
   openTemplateForAddNewEdict() {
     this.setDefaultTemplateData();
-    this.stateIndex = this.getMaxId();
-    this.templateEdictItem.id = this.stateIndex;
     this.templateForm.showTemplateForm(true, "Добавить указ");
-  }
-  getMaxId() {
-    let maxId =  this.edicts.length == 0 
-      ? 1 
-      : this.edicts[this.edicts.length-1].id++;
-    return maxId;
   }
   // Операции связанные с контекстным меню
   openInnerMenu(event:any) : boolean {
@@ -145,13 +119,8 @@ export class EdictListComponent implements OnInit {
     let edict = this.edicts.find(item => item.id == $event.id);
     if (edict) {
       this.edictService.updateEdict($event);
-      //alert("Исправлен указ: " + edict.header);
-      //let indexItem = this.edicts.indexOf(edict);
-      //this.edicts[indexItem] = $event;
     } else {
       this.edictService.addEdict($event);
-      //alert("Добавлен указ: " + $event.header);
-      //this.edicts.push($event);
     }
     this.templateForm.closeTemplate();
     this.edictList.forEach(x => x.checkEdict());
@@ -159,9 +128,6 @@ export class EdictListComponent implements OnInit {
   }  
   removeEdictFromList(edict: edictItem) {
     this.edictService.removeEdict(edict);
-    // alert("Удален указ: " + edict.header);
-    // let indexOfRemovedEdict = this.edicts.indexOf(edict);
-    // this.edicts.splice(indexOfRemovedEdict, 1); 
   }
   deleteAllSelectedEdict() {
     let renewEdictList: edictItem[] = [];
@@ -170,8 +136,7 @@ export class EdictListComponent implements OnInit {
         renewEdictList.push(edict);
       }
     });
-    this.edictService.removeEdictAllSelectedEdict(renewEdictList);
-    // this.edicts = renewEdictList;
+    this.edictService.removeEdicts(renewEdictList);
     this.isAnyEdictSelected = false;
   }
   // Работа с шаблоном
@@ -181,12 +146,12 @@ export class EdictListComponent implements OnInit {
   }
   // 
   ngDoCheck(): void {
-    console.log('Edict list ngDoCheck');
+    //console.log('Edict list ngDoCheck');
   } 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('Edict list ngOnChanges');
+    //console.log('Edict list ngOnChanges');
   }
   ngOnDestroy(): void {
-    console.log('Edict list ngOnDestroy');
+    //console.log('Edict list ngOnDestroy');
   }
 }

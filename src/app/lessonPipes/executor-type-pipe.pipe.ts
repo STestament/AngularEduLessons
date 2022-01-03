@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { edictItem, executedPerson } from './lesson1/classStore';
+import { edictItem, executedPerson } from '../lesson1/classStore';
 
 @Pipe({
   name: 'executorTypePipe'

@@ -8,9 +8,9 @@ export type edictItem = {
 }
 
 export enum executedPerson {
-    Unassigned = "Не назначен",
-    CityBuilder = "Градостроитель",
-    WarChief = "Военачальник",
-    Advisor = "Советник",
-    Spy = "Шпион"
+    Unassigned = "Unassigned",
+    CityBuilder = "CityBuilder",
+    WarChief = "WarChief",
+    Advisor = "Advisor",
+    Spy = "Spy"
 }

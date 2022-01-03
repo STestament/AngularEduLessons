@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/internal/Observable';
@@ -9,30 +9,32 @@ import { citizen, king, UserType } from '../users';
 })
 export class UsersService {
 
-  private userSubject: BehaviorSubject<UserType>;
-  constructor(private httpClient: HttpClient) {
-    this.userSubject = new BehaviorSubject<UserType>(king);
-  }
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    var requestResult = request.clone({
-      headers: new HttpHeaders().set('authorization', 'user-password')
-    });
-    return next.handle(requestResult);
-  }
+  private userSubject!: BehaviorSubject<UserType>;
+  public currentUser = new UserType();
+  constructor(private httpClient: HttpClient) { }
 
-  public getUser(userType: boolean): Observable<UserType>{
-    //if(!this.userSubject){
-      //this.userSubject = new BehaviorSubject<UserType>(king);
-      this.httpClient.post('https://localhost:5001/User/GetUser', userType).pipe()
+  public getUser(userName: string): Observable<UserType>{
+    if (!this.userSubject) {   
+      this.userSubject = new BehaviorSubject<UserType>(this.currentUser); 
+      let params = {
+        params: new HttpParams().set('loginName', userName)
+      }
+      //this.httpClient.post('https://localhost:5001/User/GetUser', userName) //
+      this.httpClient.get('https://localhost:5001/User/GetUser', params)
       .subscribe({
         next: (user) => { 
-          let newUser = user as UserType;
-          this.userSubject.next(newUser); 
+          let currentUserData = user != null 
+            ? user as UserType
+            : new UserType();
+          this.currentUser = currentUserData;
+          this.userSubject.next(currentUserData); 
         },
-        error: (error: HttpErrorResponse) => console.log(error.message),
-        //complete: () => { console.log("get user complete"); }      
+        error: (error: HttpErrorResponse) => {
+          console.log(error.message);
+        },
+        complete: () => { console.log("Установлен пользователь"); }      
       });
-    //}
+    }
     return this.userSubject.asObservable();   
   }  
 }

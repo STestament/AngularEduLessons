@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { edictItem } from './lesson1/classStore';
+import { edictItem } from '../lesson1/classStore';
 
 @Pipe({
   name: 'uppercasetitlePipe'
