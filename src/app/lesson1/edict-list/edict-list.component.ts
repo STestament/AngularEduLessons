@@ -4,6 +4,13 @@ import { EdictComponent } from '../edict/edict.component';
 import { TemplateFormComponent } from '../template-form/template-form.component';
 import { EdictsService } from 'src/app/lessonServices/edicts.service';
 import { UsersService } from 'src/app/lessonServices/users.service';
+import { Subject, takeUntil } from 'rxjs';
+import { EdictTemplateComponent } from '../edict-template/edict-template.component';
+import { Observable } from 'rxjs';
+import { debounceTime } from 'rxjs';
+import { map } from 'rxjs';
+import { distinctUntilChanged } from 'rxjs';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-edict-list',
@@ -12,7 +19,9 @@ import { UsersService } from 'src/app/lessonServices/users.service';
 })
 export class EdictListComponent implements OnInit {
   @ViewChild("templateForm") templateForm!: TemplateFormComponent;
-  @ViewChildren("edict") edictList!:QueryList<EdictComponent>
+  @ViewChild("templateEdict") templateEdict!: EdictTemplateComponent;
+  @ViewChildren("edict") edictList!:QueryList<EdictComponent>;
+  @ViewChild("inputFilter") inputFilter!: ElementRef
   //
   public loginName: string = "";
   public isHasPermission: boolean = false;
@@ -34,23 +43,46 @@ export class EdictListComponent implements OnInit {
     isSelectEdictState: false,
     executedPerson: executedPerson.Unassigned
   }
+  // Контрол фильтрации данных
+  searchControl!: FormControl;
+  searchValue: string = "";
+  // наблюдатель для отписки
+  private unSubscribe!: Subject<void>
 
   constructor(private edictService: EdictsService, 
               private userService: UsersService,
               private cdr: ChangeDetectorRef) { 
-    this.edictService.getEdicts().pipe().subscribe({
+                this.loginName = this.userService.currentUser?.login;
+  }
+
+  ngOnInit(): void {
+    this.unSubscribe = new Subject();   
+    this.edictService.getEdicts().pipe(
+      takeUntil(this.unSubscribe)
+    ).subscribe({
       next: (data) => {
         this.edicts = data;
         this.cdr.markForCheck();
       },
       error: (e) => { console.log(e.message); },
       complete: () => { console.log('Данные получены'); } 
-    });    
+    }); 
+
+    this.searchControl = new FormControl(this.searchValue);
+    this.searchControl.valueChanges
+    .pipe(
+      debounceTime(3000),
+      distinctUntilChanged((previousValue: string, currentValue: string)=> previousValue === currentValue),
+    )
+    .subscribe((value) => {
+      this.edictService.searchEdicts(value);
+    });
   }
 
-  ngOnInit(): void {
-
+  ngAfterViewInit() {
+    this.loginName = this.userService.currentUser?.login;
   }
+
   //
   setKingLogin(login: string) {
     this.loginName = this.userService.currentUser?.login;
@@ -79,17 +111,11 @@ export class EdictListComponent implements OnInit {
   // Работа с модальной формой  
   openTemplateForEdit(edict: edictItem) {
     this.templateForm.showTemplateForm(true, "Изменить указ");
-    this.templateEdictItem = {
-      id: edict.id, 
-      header: edict.header, 
-      description: edict.description, 
-      dayOfComplete: edict.dayOfComplete, 
-      isSelectEdictState: false,
-      executedPerson: edict.executedPerson
-    }
+    this.templateEdict.openTemplate(edict);
   }
   openTemplateForAddNewEdict() {
     this.setDefaultTemplateData();
+    this.templateEdict.openTemplate(this.templateEdictItem);
     this.templateForm.showTemplateForm(true, "Добавить указ");
   }
   // Операции связанные с контекстным меню
@@ -153,5 +179,7 @@ export class EdictListComponent implements OnInit {
   }
   ngOnDestroy(): void {
     //console.log('Edict list ngOnDestroy');
+    this.unSubscribe.next();
+    this.unSubscribe.complete();
   }
 }

@@ -14,6 +14,8 @@ import { StyleTypeDirective } from './lessonDirectives/style-type.directive';
 import { UserPermissionDirective } from './lessonDirectives/user-permission.directive';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterceptorService } from './lessonServices/http-interceptor.service';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ExecutorTypeComponent } from './lesson1/executor-type/executor-type.component';
 
 @NgModule({
   declarations: [
@@ -27,11 +29,14 @@ import { HttpInterceptorService } from './lessonServices/http-interceptor.servic
     UppercasetitlePipePipe,
     ExecutorTypePipePipe,
     StyleTypeDirective,
-    UserPermissionDirective
+    UserPermissionDirective,
+    ExecutorTypeComponent
   ],
   imports: [
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [ 
     {

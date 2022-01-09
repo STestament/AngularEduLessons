@@ -61,6 +61,10 @@ namespace AngularServer.Models
         {
             return _edicts.ToArray();
         }
+        public EdictItem[] GetEdicts(string filter)
+        {
+            return _edicts.Where(item => item.Header.Contains(filter)).ToArray();
+        }
 
         public int AddEdict(EdictItem edict)
         {

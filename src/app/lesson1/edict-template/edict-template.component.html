@@ -1,32 +1,29 @@
-<ng-container *ngTemplateOutlet="inputElement; context: { contentName: 'Указ', value: templateEdictData?.header, type: 'text', change: changeHeader }"></ng-container>
-<ng-container *ngTemplateOutlet="inputElement; context: { contentName: 'Описание', value: templateEdictData?.description, type: 'text', change: changeDescription }"></ng-container>
-<ng-container *ngTemplateOutlet="inputElement; context: { contentName: 'Кол-во дней', value: templateEdictData?.dayOfComplete, type: 'text', change: changeDays }"></ng-container>
-<ng-container *ngTemplateOutlet="radioButtonElement; context: {executor: templateEdictData?.executedPerson}"></ng-container>
+<div #templateEdict class="templateContent" [formGroup] = "templateForm">
+    <div class="inputElement">Указ: 
+        <input formControlName="edictName" type="text">
+        <div class="errorText" *ngIf="edictName?.errors">
+            {{ edictName?.errors?.["notEmpty"]?.message }}
+            {{ edictName?.errors?.["notLessThanSix"]?.message }}
+        </div>
+    </div>
+    <div class="inputElement">Описание: 
+        <input formControlName="edictDescription" type="text">
+        <div class="errorText" *ngIf="edictDescription?.errors">
+            {{ edictDescription?.errors?.["notEmpty"]?.message }}
+        </div>
+    </div>
+    <div class="inputElement">Кол-во дней: 
+        <input formControlName="edictDaysComplete" type="text">
+        <div class="errorText" *ngIf="edictDaysComplete?.errors">
+            {{ edictDaysComplete?.errors?.["notEmpty"]?.message }}
+        </div>
+    </div>
+    <app-executor-type formControlName="executorType"></app-executor-type>
 
-<div class="templateContent">
-    <ng-template #inputElement let-valueItem="value" let-typeItem="type" let-contentName="contentName" let-changeFnc="change">
-        <div class="inputElement">{{contentName}}: <input #inputItem [type]="typeItem" [value]="valueItem" (change)="changeFnc(inputItem.value)"></div>
-    </ng-template>
-    <ng-template #radioButtonElement let-executorItem="executor">
-        <label>Исполнитель:</label>
-        <div><input type="radio" name="executorType" (click)="selectExecutor('CityBuilder')" [checked]="executorItem == 'CityBuilder'" />
-            <span [appStyleType]="'CityBuilder'" >[-]</span> Градостроитель
-        </div>
-        <div><input type="radio" name="executorType" (click)="selectExecutor('WarChief')" [checked]="executorItem == 'WarChief'" />
-            <span [appStyleType]="'WarChief'" >[-]</span> Военачальник
-        </div>
-        <div><input type="radio" name="executorType" (click)="selectExecutor('Advisor')" [checked]="executorItem == 'Advisor'" />
-            <span [appStyleType]="'Advisor'" >[-]</span> Советник
-        </div>
-        <div><input type="radio" name="executorType" (click)="selectExecutor('Spy')" [checked]="executorItem == 'Spy'" />
-            <span [appStyleType]="'Spy'" >[-]</span> Шпион
-        </div>
-        <div><input type="radio" name="executorType" (click)="selectExecutor('Unassigned')" [checked]="executorItem == 'Unassigned'" />
-            <span [appStyleType]="'Unassigned'" >[-]</span> Не назначен
-        </div>
-    </ng-template>
 </div>
 <div>
-    <input *appUserPermission = "true" type="button" [value]="'Сохранить'" style="margin-right: 10px;" (click)="saveTemplate()" />
+    <input type="button" [value]="'Сохранить'" style="margin-right: 10px;" 
+        (click)="saveTemplate()"
+        [disabled]="!templateForm.valid" />
     <input type="button" [value]="'Отменить'" style="margin-right: 10px;" (click)="closeTemplate()" /> 
 </div>

@@ -1,0 +1,6 @@
+<div class="inputElement">Исполнитель: 
+    <div *ngFor="let item of radioButtonDataSource | keyvalue; let i = index">
+        <input type="radio" [value]="item.value" (blur)="onBlur()" (change)="selectExecutor(item.value)" [checked]="item.value == selectedExecutor">
+        <span [appStyleType]="item.value">[-]</span><span> {{item.value}}</span>
+    </div>    
+</div>

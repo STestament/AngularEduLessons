@@ -24,6 +24,16 @@ namespace AngularServer.Controllers
             return _edictService.GetEdicts();
         }
 
+        [HttpGet]
+        public EdictItem[] SearchEdicts(string filterText)
+        {
+            if (!string.IsNullOrEmpty(filterText))
+            {
+                return _edictService.GetEdicts(filterText);
+            }
+            return _edictService.GetEdicts();
+        }
+
         [HttpPost]
         public int AddEdict(EdictItem edict)
         {

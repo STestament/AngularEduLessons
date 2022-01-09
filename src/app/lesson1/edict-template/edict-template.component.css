@@ -11,3 +11,13 @@
 .inputElement {
     margin-top: 5px;
 }
+.ng-dirty {
+    border-color: rgb(37, 253, 17);
+}
+.ng-invalid {
+    border-color: red;
+}
+.errorText {
+    font-style: italic;
+    color: brown;
+}

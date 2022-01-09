@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { edictItem, executedPerson } from '../lesson1/classStore';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 
 
@@ -12,6 +12,7 @@ export class EdictsService {
   private edictSubject!: BehaviorSubject<edictItem[]>;
   constructor(private httpClient: HttpClient) { }
 
+  // Получение данных
   public getEdicts(): Observable<edictItem[]>{
     if (!this.edictSubject) {
       this.edictSubject = new BehaviorSubject<edictItem[]>([]);    
@@ -23,6 +24,18 @@ export class EdictsService {
     return this.edictSubject.asObservable();
   }
 
+  public searchEdicts(filterString: string): Observable<edictItem[]> {
+    let params = {
+      params: new HttpParams().set('filterText', filterString)
+    }
+    this.httpClient.get<edictItem[]>('https://localhost:5001/Edict/SearchEdicts', params)
+        .subscribe((item) => {
+          this.edictSubject.next(item);
+      });
+      return this.edictSubject.asObservable();
+  }
+
+  // Работы с записями
   public addEdict(edictItem: edictItem) {
     if (this.edictSubject) {
       this.httpClient.post('https://localhost:5001/Edict/AddEdict', edictItem)
@@ -80,8 +93,7 @@ export class EdictsService {
         error: (error: HttpErrorResponse) => console.log(error.message),
         complete: () => { console.log("Удалены отмеченные элементы"); }
       });
-    }
-    
+    }    
   }
 }
 

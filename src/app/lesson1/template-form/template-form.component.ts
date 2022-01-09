@@ -1,7 +1,6 @@
 import { EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { edictItem, executedPerson } from '../classStore';
-
 @Component({
   selector: 'app-template-form',
   templateUrl: './template-form.component.html',
@@ -10,12 +9,13 @@ import { edictItem, executedPerson } from '../classStore';
 export class TemplateFormComponent implements OnInit {
   isVisibleTemplate: boolean = false;
   titleTemplate: string = "";
-  constructor() { }
+  constructor(private cdr: ChangeDetectorRef) { }
   ngOnInit(): void {
   }
   showTemplateForm(isVisible: boolean, title: string) {
     this.isVisibleTemplate = isVisible;
     this.titleTemplate = title;
+    this.cdr.markForCheck();
   }
   closeTemplate() {
     this.isVisibleTemplate = false;

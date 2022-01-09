@@ -3,7 +3,7 @@ div.selectedEdict {
     padding: 10px;
     border: 1px solid black;
     font-size: 14px;
-    width: 700px;
+    width: 450px;
     background-color: gold;
 }
 div.itemEdict {
@@ -11,7 +11,7 @@ div.itemEdict {
     padding: 10px;
     border: 1px solid black;
     font-size: 14px;
-    width: 700px;
+    width: 450px;
     background-color: rgb(214, 252, 233);
 }
 
