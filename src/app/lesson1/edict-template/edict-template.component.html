@@ -19,7 +19,10 @@
         </div>
     </div>
     <app-executor-type formControlName="executorType"></app-executor-type>
-
+    <div class="errorText" *ngIf="executorType?.errors">
+        {{ executorType?.errors | json }}
+    </div>
+    <div class="hintText" *ngIf="executorType?.value == 'Unassigned'">Не оставляйте указ без исполнителя</div>
 </div>
 <div>
     <input type="button" [value]="'Сохранить'" style="margin-right: 10px;" 

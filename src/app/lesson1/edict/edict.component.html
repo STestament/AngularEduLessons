@@ -10,7 +10,7 @@
     </div>       
     <input type="button" value="Принять к исполнению"  style="margin-right: 10px;" 
         (click)="editEdict()"/>
-    <input type="button" value="Отклонить указ" style="margin-right: 10px;"
+    <input *appUserPermission="true" type="button" value="Отклонить указ" style="margin-right: 10px;"
         [disabled]="singleEdict.isSelectEdictState ? false : true"
         (click)="removeEdict()"/> выбран элемент: {{ singleEdict.isSelectEdictState | json }}
 </div>

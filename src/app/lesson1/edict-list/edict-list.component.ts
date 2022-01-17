@@ -11,6 +11,8 @@ import { debounceTime } from 'rxjs';
 import { map } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs';
 import { FormControl } from '@angular/forms';
+import { exhaustMap } from 'rxjs';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-edict-list',
@@ -73,9 +75,17 @@ export class EdictListComponent implements OnInit {
     .pipe(
       debounceTime(3000),
       distinctUntilChanged((previousValue: string, currentValue: string)=> previousValue === currentValue),
+      switchMap(value => {
+        return this.edictService.searchEdicts(value);  
+      }),
     )
-    .subscribe((value) => {
-      this.edictService.searchEdicts(value);
+    .subscribe({
+      next: (data) => {
+        this.edicts = data;
+        this.cdr.markForCheck();
+      },
+      error: (e) => { console.log(e.message); },
+      complete: () => { console.log('Данные по фильтру получены'); } 
     });
   }
 

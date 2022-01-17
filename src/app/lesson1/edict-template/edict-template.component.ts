@@ -37,7 +37,7 @@ export class EdictTemplateComponent implements OnInit {
       edictName: [this.templateEdictData.header, [notEmpty, notLessThanSix]],
       edictDescription: [this.templateEdictData.description, [notEmpty]],
       edictDaysComplete: [this.templateEdictData.dayOfComplete, [notEmpty]],
-      executorType: [this.templateEdictData.executedPerson]
+      executorType: [this.templateEdictData.executedPerson, [Validators.required]]
     });
 
     this.edictName.valueChanges.subscribe((value:string)=> this.changeHeader(value));
