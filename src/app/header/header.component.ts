@@ -1,13 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-type visitor = {
-  name: string,
-  status: string,
-  house?: {
-    city: string,
-    region: string
-  }
-}
+import { UsersService } from '../lessonServices/users.service';
 
 @Component({
   selector: 'app-header',
@@ -15,40 +7,17 @@ type visitor = {
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-  public title: string = "Казна";
-  public currentGold: number = 100;
-  public visitor: visitor = {
-    name: 'Иван',
-    status: 'крестьянин'   
-  };
-  public headerClass: string = "color_blue";
-  public styleColor: string = "green";
-  public sirDecisionStyle: string = "blue";
-  public randomGoldValue: number = 1;
-  public randomGrainValue: number = 1;
-  constructor() { }
+  public loginName: string = "Вход"
+  constructor(private userService: UsersService) {
+  }
 
   ngOnInit(): void {
-    //this.randomColor();
-    this.randomGoldValue = this.random();
-    this.randomGrainValue = this.random();
-  }
 
-  public random(): number {
-    return Math.round(Math.random()*100);
-  } 
-  public randomColor() {
-    setTimeout(() => {
-      this.headerClass = "color_red";
-      setTimeout(() => {
-        this.headerClass = "color_blue";  
-      }, 3000);
-    }, 3000);
-  } 
-  changeColor(color: string) {
-    this.sirDecisionStyle = color;
-  } 
-  getInputValue($event: Event){
-    this.changeColor(($event.target as HTMLInputElement).value)
   }
+  public isHasAuth() {
+    return this.userService.hasUserAuth;
+  } 
+  public logout() {
+    this.userService.unsubscribe();
+  }   
 }

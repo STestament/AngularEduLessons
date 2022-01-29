@@ -16,10 +16,17 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpInterceptorService } from './lessonServices/http-interceptor.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ExecutorTypeComponent } from './lesson1/executor-type/executor-type.component';
+import { AppRoutingModule } from './app-routing.module';
+import { ProfileComponent } from './lesson1/profile/profile.component';
+import { LoginFormComponent } from './lesson1/login-form/login-form.component';
+import { HeaderComponent } from './header/header.component';
+import { FooterComponent } from './footer/footer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    HeaderComponent,
+    FooterComponent,
     Lesson1Component,
     EdictComponent,
     EdictTemplateComponent,
@@ -30,13 +37,16 @@ import { ExecutorTypeComponent } from './lesson1/executor-type/executor-type.com
     ExecutorTypePipePipe,
     StyleTypeDirective,
     UserPermissionDirective,
-    ExecutorTypeComponent
+    ExecutorTypeComponent,
+    ProfileComponent,
+    LoginFormComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AppRoutingModule
   ],
   providers: [ 
     {

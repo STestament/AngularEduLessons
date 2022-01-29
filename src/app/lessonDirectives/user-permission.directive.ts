@@ -10,17 +10,13 @@ export class UserPermissionDirective {
               private usersService: UsersService) { }
 
   ngOnInit() {
-    this.usersService.getUser("king").pipe().subscribe({
-      next: (userData) => {
-        this.isHasPermission = userData.hasPermissions;
-        if (this.isHasPermission) {
-          this.view.createEmbeddedView(this.template);       
-        } else {
-          this.view.clear();     
-        }
-      },
-      error: (e) => { console.log(e.message); },
-      complete: () => { console.log('Получен пользователь'); } 
-    });    
+    let userData = this.usersService.currentUser;
+    this.isHasPermission = userData.hasPermissions;
+    if (this.isHasPermission) {
+      this.view.createEmbeddedView(this.template);       
+    } else {
+      this.view.clear();     
+    }
+
   }
 }

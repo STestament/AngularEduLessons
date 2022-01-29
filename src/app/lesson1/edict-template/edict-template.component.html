@@ -25,7 +25,7 @@
     <div class="hintText" *ngIf="executorType?.value == 'Unassigned'">Не оставляйте указ без исполнителя</div>
 </div>
 <div>
-    <input type="button" [value]="'Сохранить'" style="margin-right: 10px;" 
+    <input *appUserPermission="true" type="button" [value]="'Сохранить'" style="margin-right: 10px;" 
         (click)="saveTemplate()"
         [disabled]="!templateForm.valid" />
     <input type="button" [value]="'Отменить'" style="margin-right: 10px;" (click)="closeTemplate()" /> 

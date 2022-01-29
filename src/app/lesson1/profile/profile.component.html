@@ -1,0 +1,18 @@
+<form [formGroup]="loginForm" (submit)="submit()" submitName="Войти">
+    <div class="formItem">
+        <label>Посетитель: </label>
+        <input name="name" formControlName="login" />
+    </div>
+    <div class="formItem">
+        <label>Имя: </label>
+        <input name="pass" formControlName="firstName" />
+    </div>
+    <div class="formItem">
+        <label>Фамилия: </label>
+        <input name="pass" formControlName="surName" />
+    </div>
+    <div class="formItem">
+        <button [disabled]="loginForm.invalid" type="submit">Внести изменения</button>
+        <button type="button" (click) = "cancel()">Отменить</button>
+    </div>    
+</form>

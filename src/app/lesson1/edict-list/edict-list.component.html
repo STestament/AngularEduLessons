@@ -1,18 +1,24 @@
-<div>    
+<div class="leftFilter"> 
+    <input type="radio" [value]="-1" (change)="filterByExecutor('')" [checked]="defaultExecutorFilter == selectedExecutorFilter">
+        <span>[-]</span><span> Все</span>
+    <div *ngFor="let item of radioButtonDataSource | keyvalue; let i = index">        
+        <input type="radio" [value]="item.value" (change)="filterByExecutor(item.value)" [checked]="item.value == selectedExecutorFilter">
+        <span>[-]</span><span> {{item.value}}</span>
+    </div>    
+</div>
+<div style="display: inline-block;">    
     <div class="buttonsArea">
         <div class="inputFilter">
             <input #inputFilter placeholder="Поиск" type="text" [formControl]="searchControl" style="width: inherit;">
         </div>
-        <input type="button" value="Добавить указ" style="margin-left: 10px;" 
-            (click)="openTemplateForAddNewEdict()">
-        <input *appUserPermission="true" type="button" value="Удалить указ" style="margin-left: 10px;" 
-            [disabled] = "!isAnyEdictSelected" 
-            (click)="deleteAllSelectedEdict()">
-        <!-- <input type="button" value="Король" style="margin-left: 10px;" 
-            (click)="setKingLogin('king')">
-        <input type="button" value="Горожанин" style="margin-left: 10px;" 
-            (click)="setKingLogin('citizen')">-->
-        {{loginName}} 
+        <div>
+            <input type="button" value="Добавить указ" style="margin-left: 10px;" 
+                (click)="openTemplateForAddNewEdict()">
+            <input *appUserPermission="true" type="button" value="Удалить указ" style="margin-left: 10px;" 
+                [disabled] = "!isAnyEdictSelected" 
+                (click)="deleteAllSelectedEdict()"> 
+            {{loginName}} 
+        </div>        
     </div>
     <div class="listOfEdict">
         <app-edict *ngFor="let edict of edicts" #edict

@@ -1,6 +1,17 @@
-.color_blue {
-    color:blueviolet;
+.menu {
+    background-color: mediumseagreen;
+    border: 1px solid green;
+    width: 1240px;
 }
-.color_red {
-    color:darkred;
+.menuItem {
+    padding: 3px;
+    margin: 3px;
+    display: inline-block;
+}
+.routerLinkActiveClass {
+    font-weight: bold;  
+}
+.menuItem > a {    
+    text-decoration: none; 
+    color: cornsilk; 
 }

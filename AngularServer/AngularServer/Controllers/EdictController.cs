@@ -24,10 +24,38 @@ namespace AngularServer.Controllers
             return _edictService.GetEdicts();
         }
 
-        [HttpPost]
-        public void AddEdict(EdictItem edict)
+        [HttpGet]
+        public EdictItem[] SearchEdicts(string filterText)
         {
-            _edictService.AddEdict(edict);
+            if (!string.IsNullOrEmpty(filterText))
+            {
+                return _edictService.GetEdicts(filterText);
+            }
+            return _edictService.GetEdicts();
+        }
+        [HttpGet]
+        public EdictItem[] FilterEdicts(string filterText, string filterType)
+        {
+            EdictItem[] edicts = new EdictItem[] { };
+            if (!string.IsNullOrEmpty(filterText))
+            {
+                edicts = _edictService.GetEdicts(filterText);
+            }
+            else {
+                edicts = _edictService.GetEdicts();
+            }
+            if (!string.IsNullOrEmpty(filterType))
+            {
+                edicts = _edictService.GetFilters(edicts, filterType);
+            }
+            return edicts;
+        }
+
+        [HttpPost]
+        public int AddEdict(EdictItem edict)
+        {
+            var maxId = _edictService.AddEdict(edict);
+            return maxId;
         }
 
         [HttpPost]

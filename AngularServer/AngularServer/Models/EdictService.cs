@@ -61,10 +61,22 @@ namespace AngularServer.Models
         {
             return _edicts.ToArray();
         }
-
-        public void AddEdict(EdictItem edict)
+        public EdictItem[] GetEdicts(string filter)
         {
+            return _edicts.Where(item => item.Header.Contains(filter)).ToArray();
+        }
+        public EdictItem[] GetFilters(EdictItem[] edicts,  string filter)
+        {
+            return edicts.Where(item => item.ExecutedPerson.ToString().Contains(filter)).ToArray();
+        }
+
+        public int AddEdict(EdictItem edict)
+        {
+            var maxId = _edicts.Max(x => x.Id);
+            maxId++;
+            edict.Id = maxId;
             _edicts.Add(edict);
+            return maxId;
         }
 
         public void UpdateEdict(EdictItem edict)

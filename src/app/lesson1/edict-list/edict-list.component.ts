@@ -8,11 +8,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { EdictTemplateComponent } from '../edict-template/edict-template.component';
 import { Observable } from 'rxjs';
 import { debounceTime } from 'rxjs';
-import { map } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { exhaustMap } from 'rxjs';
 import { switchMap } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-edict-list',
@@ -31,6 +30,10 @@ export class EdictListComponent implements OnInit {
   public stateIndex: number = -1;
   public isEditState: boolean = false;
   public isAnyEdictSelected: boolean = false;
+  // Левое меню-фильтр
+  public selectedExecutorFilter: executedPerson = executedPerson.Unassigned;
+  public defaultExecutorFilter: string = '';
+  public radioButtonDataSource: typeof executedPerson = executedPerson;
   // Внутреннее меню
   public isVisibleInnerMenu: boolean = false;  
   public xMenu = 0;
@@ -48,35 +51,37 @@ export class EdictListComponent implements OnInit {
   // Контрол фильтрации данных
   searchControl!: FormControl;
   searchValue: string = "";
+  isTemplateActive: string = "";
   // наблюдатель для отписки
   private unSubscribe!: Subject<void>
 
   constructor(private edictService: EdictsService, 
               private userService: UsersService,
+              private router: Router, 
+              private route: ActivatedRoute,
               private cdr: ChangeDetectorRef) { 
-                this.loginName = this.userService.currentUser?.login;
+                
   }
 
   ngOnInit(): void {
     this.unSubscribe = new Subject();   
-    this.edictService.getEdicts().pipe(
-      takeUntil(this.unSubscribe)
-    ).subscribe({
-      next: (data) => {
-        this.edicts = data;
-        this.cdr.markForCheck();
-      },
-      error: (e) => { console.log(e.message); },
-      complete: () => { console.log('Данные получены'); } 
-    }); 
+    // параметры url
+    this.route.queryParams.subscribe(
+      (params: any) => {
+        this.selectedExecutorFilter = params['filter'] ?? "";
+        this.searchValue = params['text'] ?? "";
+        this.isTemplateActive = params['template'] ?? "";
+      }
+    );
 
     this.searchControl = new FormControl(this.searchValue);
     this.searchControl.valueChanges
     .pipe(
       debounceTime(3000),
-      distinctUntilChanged((previousValue: string, currentValue: string)=> previousValue === currentValue),
+      distinctUntilChanged((previousValue: string, currentValue: string) => previousValue === currentValue),
       switchMap(value => {
-        return this.edictService.searchEdicts(value);  
+        this.searchValue = value; 
+        return this.edictService.filterEdicts(this.selectedExecutorFilter, this.searchValue)
       }),
     )
     .subscribe({
@@ -87,16 +92,36 @@ export class EdictListComponent implements OnInit {
       error: (e) => { console.log(e.message); },
       complete: () => { console.log('Данные по фильтру получены'); } 
     });
+
+
+    this.edictService.filterEdicts(this.selectedExecutorFilter, this.searchValue).pipe(
+      takeUntil(this.unSubscribe)
+    ).subscribe({
+      next: (data) => {
+        this.edicts = data;
+        this.cdr.markForCheck();
+      },
+      error: (e) => { console.log(e.message); },
+      complete: () => { console.log('Данные получены'); } 
+    });     
   }
 
   ngAfterViewInit() {
-    this.loginName = this.userService.currentUser?.login;
+    this.loginName = this.userService.currentUser?.firstName + ' ' + this.userService.currentUser?.surName;
+    if (this.isTemplateActive !== "" && this.isTemplateActive === "add") {
+      this.openTemplateForAddNewEdict();
+    }
   }
 
   //
-  setKingLogin(login: string) {
-    this.loginName = this.userService.currentUser?.login;
-    this.cdr.markForCheck();
+  filterByExecutor(executor: string) {
+    this.selectedExecutorFilter = executor as executedPerson;
+    this.edictService.filterEdicts(this.selectedExecutorFilter, this.searchValue);
+
+    this.router.navigate(['.'], {
+      relativeTo: this.route, queryParams:
+        { filter: this.selectedExecutorFilter, text: this.searchValue }
+    });
   }
   //
   setDefaultTemplateData() {
@@ -121,12 +146,20 @@ export class EdictListComponent implements OnInit {
   // Работа с модальной формой  
   openTemplateForEdit(edict: edictItem) {
     this.templateForm.showTemplateForm(true, "Изменить указ");
-    this.templateEdict.openTemplate(edict);
+    this.templateEdict.openTemplate(edict);    
+    this.router.navigate(['.'], {
+      relativeTo: this.route, queryParams:
+        { filter: this.selectedExecutorFilter, text: this.searchValue, template: 'edit' }
+    });
   }
   openTemplateForAddNewEdict() {
     this.setDefaultTemplateData();
     this.templateEdict.openTemplate(this.templateEdictItem);
     this.templateForm.showTemplateForm(true, "Добавить указ");
+    this.router.navigate(['.'], {
+      relativeTo: this.route, queryParams:
+        { filter: this.selectedExecutorFilter, text: this.searchValue, template: 'add' }
+    });
   }
   // Операции связанные с контекстным меню
   openInnerMenu(event:any) : boolean {
@@ -182,13 +215,10 @@ export class EdictListComponent implements OnInit {
   }
   // 
   ngDoCheck(): void {
-    //console.log('Edict list ngDoCheck');
   } 
   ngOnChanges(changes: SimpleChanges): void {
-    //console.log('Edict list ngOnChanges');
   }
   ngOnDestroy(): void {
-    //console.log('Edict list ngOnDestroy');
     this.unSubscribe.next();
     this.unSubscribe.complete();
   }

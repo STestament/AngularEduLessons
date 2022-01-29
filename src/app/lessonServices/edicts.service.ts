@@ -13,17 +13,6 @@ export class EdictsService {
   constructor(private httpClient: HttpClient) { }
 
   // Получение данных
-  public getEdicts(): Observable<edictItem[]>{
-    if (!this.edictSubject) {
-      this.edictSubject = new BehaviorSubject<edictItem[]>([]);    
-      this.httpClient.post<edictItem[]>('https://localhost:5001/Edict/GetEdicts', null)
-        .subscribe((item) => {
-          this.edictSubject.next(item);
-      });
-    }
-    return this.edictSubject.asObservable();
-  }
-
   public searchEdicts(filterString: string): Observable<edictItem[]> {
     let params = {
       params: new HttpParams().set('filterText', filterString)
@@ -33,6 +22,19 @@ export class EdictsService {
           this.edictSubject.next(item);
       });
       return this.edictSubject.asObservable();
+  }
+  public filterEdicts(filterType: string, filterString: string): Observable<edictItem[]> {
+    if (!this.edictSubject) {
+      this.edictSubject = new BehaviorSubject<edictItem[]>([]); 
+    }
+    let params = {
+      params: new HttpParams().set('filterText', filterString).set('filterType', filterType)
+    }
+    this.httpClient.get<edictItem[]>('https://localhost:5001/Edict/FilterEdicts', params)
+        .subscribe((item) => {          
+          this.edictSubject.next(item);
+      });
+    return this.edictSubject.asObservable();
   }
 
   // Работы с записями

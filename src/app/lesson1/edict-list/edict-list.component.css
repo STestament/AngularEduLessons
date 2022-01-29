@@ -16,7 +16,18 @@
     float: right;
 }
 .buttonsArea {
+    margin-top: 10px;
     border: 1px solid goldenrod;   
+}
+.leftFilter {
+    margin: 10px;
+    border: 1px solid goldenrod;   
+    display: inline-block;
+    width: 200px;
+    vertical-align: top;
+}
+.buttonsArea div {
+    margin: 5px;    
 }
 .inputFilter {
     width: 350px;

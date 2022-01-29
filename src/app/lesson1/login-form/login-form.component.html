@@ -1,0 +1,16 @@
+<form [formGroup]="loginForm" (submit)="submit()" submitName="Войти">
+    <div class="formItem">
+        <label>Посетитель: </label>
+        <input name="name" formControlName="login" />
+    </div>
+    <div class="formItem">
+        <label>Пароль: </label>
+        <input name="pass" formControlName="password" />
+    </div>
+    <div class="formItem">
+        <button [disabled]="loginForm.invalid">Войти</button>
+        <label class="notValid" *ngIf="isUserNotExists">
+            Неизвестный пользователь
+        </label>
+    </div>    
+</form>
