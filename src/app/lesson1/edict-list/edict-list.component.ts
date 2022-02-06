@@ -4,7 +4,7 @@ import { EdictComponent } from '../edict/edict.component';
 import { TemplateFormComponent } from '../template-form/template-form.component';
 import { EdictsService } from 'src/app/lessonServices/edicts.service';
 import { UsersService } from 'src/app/lessonServices/users.service';
-import { Subject, takeUntil } from 'rxjs';
+import { interval, Subject, takeUntil } from 'rxjs';
 import { EdictTemplateComponent } from '../edict-template/edict-template.component';
 import { Observable } from 'rxjs';
 import { debounceTime } from 'rxjs';
@@ -52,6 +52,7 @@ export class EdictListComponent implements OnInit {
   searchControl!: FormControl;
   searchValue: string = "";
   isTemplateActive: string = "";
+  isTemplateEdictId: string = ""
   // наблюдатель для отписки
   private unSubscribe!: Subject<void>
 
@@ -71,6 +72,7 @@ export class EdictListComponent implements OnInit {
         this.selectedExecutorFilter = params['filter'] ?? "";
         this.searchValue = params['text'] ?? "";
         this.isTemplateActive = params['template'] ?? "";
+        this.isTemplateEdictId = params['edict_id'] ?? "";
       }
     );
 
@@ -108,8 +110,16 @@ export class EdictListComponent implements OnInit {
 
   ngAfterViewInit() {
     this.loginName = this.userService.currentUser?.firstName + ' ' + this.userService.currentUser?.surName;
-    if (this.isTemplateActive !== "" && this.isTemplateActive === "add") {
-      this.openTemplateForAddNewEdict();
+    if (this.isTemplateActive !== "") {
+      if (this.isTemplateActive === "add") {
+        this.openTemplateForAddNewEdict();
+      } else if (this.isTemplateActive === "edit" && this.isTemplateEdictId !== "") {
+        let edictId = this.isTemplateEdictId as number | unknown;
+        let edict = this.edicts.find(item => item.id == edictId);
+        if (edict) {
+          this.openTemplateForEdit(edict as edictItem);
+        }        
+      }      
     }
   }
 
@@ -148,8 +158,10 @@ export class EdictListComponent implements OnInit {
     this.templateForm.showTemplateForm(true, "Изменить указ");
     this.templateEdict.openTemplate(edict);    
     this.router.navigate(['.'], {
-      relativeTo: this.route, queryParams:
-        { filter: this.selectedExecutorFilter, text: this.searchValue, template: 'edit' }
+      relativeTo: this.route, 
+      queryParams:
+        { filter: this.selectedExecutorFilter, text: this.searchValue, template: 'edit', edict_id: edict.id },
+      skipLocationChange: false
     });
   }
   openTemplateForAddNewEdict() {
@@ -157,8 +169,10 @@ export class EdictListComponent implements OnInit {
     this.templateEdict.openTemplate(this.templateEdictItem);
     this.templateForm.showTemplateForm(true, "Добавить указ");
     this.router.navigate(['.'], {
-      relativeTo: this.route, queryParams:
-        { filter: this.selectedExecutorFilter, text: this.searchValue, template: 'add' }
+      relativeTo: this.route, 
+      queryParams:
+        { filter: this.selectedExecutorFilter, text: this.searchValue, template: 'add' },
+      skipLocationChange: false
     });
   }
   // Операции связанные с контекстным меню
