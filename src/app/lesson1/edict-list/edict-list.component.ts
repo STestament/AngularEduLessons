@@ -19,7 +19,6 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./edict-list.component.css']
 })
 export class EdictListComponent implements OnInit {
-  @ViewChild("templateForm") templateForm!: TemplateFormComponent;
   @ViewChild("templateEdict") templateEdict!: EdictTemplateComponent;
   @ViewChildren("edict") edictList!:QueryList<EdictComponent>;
   @ViewChild("inputFilter") inputFilter!: ElementRef
@@ -54,7 +53,7 @@ export class EdictListComponent implements OnInit {
   isTemplateActive: string = "";
   isTemplateEdictId: string = ""
   // наблюдатель для отписки
-  private unSubscribe!: Subject<void>
+  private unSubscribe: Subject<void> = new Subject();
 
   constructor(private edictService: EdictsService, 
               private userService: UsersService,
@@ -64,15 +63,14 @@ export class EdictListComponent implements OnInit {
                 
   }
 
-  ngOnInit(): void {
-    this.unSubscribe = new Subject();   
+  ngOnInit(): void { 
     // параметры url
-    this.route.queryParams.subscribe(
+    this.route.queryParams.pipe(
+      takeUntil(this.unSubscribe)
+    ).subscribe(
       (params: any) => {
         this.selectedExecutorFilter = params['filter'] ?? "";
         this.searchValue = params['text'] ?? "";
-        this.isTemplateActive = params['template'] ?? "";
-        this.isTemplateEdictId = params['edict_id'] ?? "";
       }
     );
 
@@ -85,6 +83,7 @@ export class EdictListComponent implements OnInit {
         this.searchValue = value; 
         return this.edictService.filterEdicts(this.selectedExecutorFilter, this.searchValue)
       }),
+      takeUntil(this.unSubscribe)
     )
     .subscribe({
       next: (data) => {
@@ -110,17 +109,6 @@ export class EdictListComponent implements OnInit {
 
   ngAfterViewInit() {
     this.loginName = this.userService.currentUser?.firstName + ' ' + this.userService.currentUser?.surName;
-    if (this.isTemplateActive !== "") {
-      if (this.isTemplateActive === "add") {
-        this.openTemplateForAddNewEdict();
-      } else if (this.isTemplateActive === "edit" && this.isTemplateEdictId !== "") {
-        let edictId = this.isTemplateEdictId as number | unknown;
-        let edict = this.edicts.find(item => item.id == edictId);
-        if (edict) {
-          this.openTemplateForEdit(edict as edictItem);
-        }        
-      }      
-    }
   }
 
   //
@@ -154,26 +142,13 @@ export class EdictListComponent implements OnInit {
     });
   }
   // Работа с модальной формой  
-  openTemplateForEdit(edict: edictItem) {
-    this.templateForm.showTemplateForm(true, "Изменить указ");
-    this.templateEdict.openTemplate(edict);    
-    this.router.navigate(['.'], {
+  openTemplateForEdit(edict: edictItem) {  
+    this.router.navigate(['/edicts/edit', edict.id], {
       relativeTo: this.route, 
-      queryParams:
-        { filter: this.selectedExecutorFilter, text: this.searchValue, template: 'edit', edict_id: edict.id },
-      skipLocationChange: false
     });
   }
   openTemplateForAddNewEdict() {
-    this.setDefaultTemplateData();
-    this.templateEdict.openTemplate(this.templateEdictItem);
-    this.templateForm.showTemplateForm(true, "Добавить указ");
-    this.router.navigate(['.'], {
-      relativeTo: this.route, 
-      queryParams:
-        { filter: this.selectedExecutorFilter, text: this.searchValue, template: 'add' },
-      skipLocationChange: false
-    });
+    this.router.navigate(['/edicts/add']);
   }
   // Операции связанные с контекстным меню
   openInnerMenu(event:any) : boolean {
@@ -205,7 +180,7 @@ export class EdictListComponent implements OnInit {
     } else {
       this.edictService.addEdict($event);
     }
-    this.templateForm.closeTemplate();
+    this.templateEdict.closeTemplate();
     this.edictList.forEach(x => x.checkEdict());
     this.setDefaultTemplateData();
   }  
@@ -225,7 +200,7 @@ export class EdictListComponent implements OnInit {
   // Работа с шаблоном
   setDefaultDataAndCloseTemplate() {    
     this.setDefaultTemplateData();
-    this.templateForm.closeTemplate();
+    this.templateEdict.closeTemplate();
   }
   // 
   ngDoCheck(): void {

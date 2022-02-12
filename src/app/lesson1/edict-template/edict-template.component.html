@@ -1,32 +1,38 @@
-<div #templateEdict class="templateContent" [formGroup] = "templateForm">
-    <div class="inputElement">Указ: 
-        <input formControlName="edictName" type="text">
-        <div class="errorText" *ngIf="edictName?.errors">
-            {{ edictName?.errors?.["notEmpty"]?.message }}
-            {{ edictName?.errors?.["notLessThanSix"]?.message }}
+<div class="templateElement" *ngIf="isVisibleTemplate">
+    <span>{{titleTemplate}}</span>
+    <button class="templateCloseButton" (click)="closeTemplate()" >X</button>
+    <div class="contentData"> 
+        <div #templateEdict class="templateContent" [formGroup] = "templateForm">
+            <div class="inputElement">Указ: 
+                <input formControlName="edictName" type="text">
+                <div class="errorText" *ngIf="edictName?.errors">
+                    {{ edictName?.errors?.["notEmpty"]?.message }}
+                    {{ edictName?.errors?.["notLessThanSix"]?.message }}
+                </div>
+            </div>
+            <div class="inputElement">Описание: 
+                <input formControlName="edictDescription" type="text">
+                <div class="errorText" *ngIf="edictDescription?.errors">
+                    {{ edictDescription?.errors?.["notEmpty"]?.message }}
+                </div>
+            </div>
+            <div class="inputElement">Кол-во дней: 
+                <input formControlName="edictDaysComplete" type="text">
+                <div class="errorText" *ngIf="edictDaysComplete?.errors">
+                    {{ edictDaysComplete?.errors?.["notEmpty"]?.message }}
+                </div>
+            </div>
+            <app-executor-type formControlName="executorType"></app-executor-type>
+            <div class="errorText" *ngIf="executorType?.errors">
+                {{ executorType?.errors | json }}
+            </div>
+            <div class="hintText" *ngIf="executorType?.value == 'Unassigned'">Не оставляйте указ без исполнителя</div>
         </div>
-    </div>
-    <div class="inputElement">Описание: 
-        <input formControlName="edictDescription" type="text">
-        <div class="errorText" *ngIf="edictDescription?.errors">
-            {{ edictDescription?.errors?.["notEmpty"]?.message }}
+        <div>
+            <input *appUserPermission="true" type="button" [value]="'Сохранить'" style="margin-right: 10px;" 
+                (click)="saveTemplate()"
+                [disabled]="!templateForm.valid" />
+            <input type="button" [value]="'Отменить'" style="margin-right: 10px;" (click)="closeTemplate()" /> 
         </div>
-    </div>
-    <div class="inputElement">Кол-во дней: 
-        <input formControlName="edictDaysComplete" type="text">
-        <div class="errorText" *ngIf="edictDaysComplete?.errors">
-            {{ edictDaysComplete?.errors?.["notEmpty"]?.message }}
-        </div>
-    </div>
-    <app-executor-type formControlName="executorType"></app-executor-type>
-    <div class="errorText" *ngIf="executorType?.errors">
-        {{ executorType?.errors | json }}
-    </div>
-    <div class="hintText" *ngIf="executorType?.value == 'Unassigned'">Не оставляйте указ без исполнителя</div>
-</div>
-<div>
-    <input *appUserPermission="true" type="button" [value]="'Сохранить'" style="margin-right: 10px;" 
-        (click)="saveTemplate()"
-        [disabled]="!templateForm.valid" />
-    <input type="button" [value]="'Отменить'" style="margin-right: 10px;" (click)="closeTemplate()" /> 
-</div>
+    </div>    
+</div> 

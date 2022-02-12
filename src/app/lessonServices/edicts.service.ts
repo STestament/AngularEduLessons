@@ -37,6 +37,10 @@ export class EdictsService {
     return this.edictSubject.asObservable();
   }
 
+  public getEdictsAsOberverble(): Observable<edictItem[]>{
+    return this.edictSubject.asObservable();
+  }
+
   // Работы с записями
   public addEdict(edictItem: edictItem) {
     if (this.edictSubject) {
