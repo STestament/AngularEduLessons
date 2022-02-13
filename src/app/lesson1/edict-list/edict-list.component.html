@@ -31,13 +31,7 @@
         </app-edict>
     </div>
     <div class="templateItem">
-        <app-template-form #templateForm>
-            <app-edict-template #templateEdict
-                [edictTemplateData]="templateEdictItem" 
-                (sendEdictToSave)="saveEdictToList($event)" 
-                (setDefaultDataAndClose)="setDefaultDataAndCloseTemplate()">                
-            </app-edict-template>
-        </app-template-form>
+        <router-outlet></router-outlet>
     </div>
     <app-inner-menu *ngIf="isVisibleInnerMenu" [x]="xMenu" [y]="yMenu" 
         (selectAllEdict)="selectAllEdict()">
