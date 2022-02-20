@@ -72,6 +72,7 @@ export class EdictsService {
         complete: () => { console.log("Обновлен элемент"); }
       });
     }
+    return this.edictSubject.asObservable();
   }
 
   public removeEdict(edictItem: edictItem) {    

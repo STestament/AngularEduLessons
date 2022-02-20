@@ -6,6 +6,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { EdictsService } from 'src/app/lessonServices/edicts.service';
 import { edictItem, executedPerson } from '../classStore';
 import { notEmpty, notLessThanSix } from '../validator/customValidator';
+import { Store } from '@ngrx/store';
+import * as fromStore from '../../store';
 
 type paramsRequest = {
   edictId: number;
@@ -42,7 +44,8 @@ export class EdictTemplateComponent implements OnInit {
   
   constructor(private cdr: ChangeDetectorRef, private fb: FormBuilder,
     private edictsService: EdictsService,
-    private route: ActivatedRoute, private router: Router) { }
+    private route: ActivatedRoute, private router: Router,
+    private store: Store<fromStore.State>) { }
 
   ngOnInit(): void {    
     this.edictsService.getEdictsAsOberverble().pipe(
