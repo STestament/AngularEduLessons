@@ -65,7 +65,16 @@ export class EdictsService {
         next: () => {
           let edicts = this.edictSubject.getValue();
           let indexUpdatedEdict = edicts.findIndex(e => e.id === edictItem.id);
-          edicts[indexUpdatedEdict] = edictItem;
+
+          if (indexUpdatedEdict === -1) {
+            edicts.push(edictItem);
+            alert("Добавлено");
+          }
+          else {
+            edicts[indexUpdatedEdict] = edictItem;
+            alert("Изменено");
+          }          
+
           this.edictSubject.next(edicts);
         },
         error: (error: HttpErrorResponse) => console.log(error.message),

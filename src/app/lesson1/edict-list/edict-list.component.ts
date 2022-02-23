@@ -68,7 +68,12 @@ export class EdictListComponent implements OnInit {
               private route: ActivatedRoute,
               private cdr: ChangeDetectorRef,
               private store: Store<fromStore.State>) { 
-                
+
+                this.store.dispatch(fromStore.loadEdicts());
+
+                this.edicts$ = this.store.pipe(select(fromStore.selectorEdicts));
+                this.count$ = this.store.pipe(select(fromStore.selectorCountEdicts));
+                this.countEdictTypes$ = this.store.pipe(select(fromStore.selectorEdictsTypesCount));        
   }
 
   ngOnInit(): void { 
@@ -112,12 +117,12 @@ export class EdictListComponent implements OnInit {
     //   .subscribe(results => this.store.dispatch(fromStore.loadEdictsSuccess({edicts: results})));
 
 
-      this.store.dispatch(fromStore.loadEdicts());
+      //this.store.dispatch(fromStore.loadEdicts());
       // this.edicts$ = this.store.pipe(select(state => state.edictObjects.edicts));
       // this.count$ = this.store.pipe(select(state => state.edictObjects.edicts?.length));
-      this.edicts$ = this.store.pipe(select(fromStore.selectorEdicts));
-      this.count$ = this.store.pipe(select(fromStore.selectorCountEdicts));
-      this.countEdictTypes$ = this.store.pipe(select(fromStore.selectorEdictsTypesCount));
+      //this.edicts$ = this.store.pipe(select(fromStore.selectorEdicts));
+      //this.count$ = this.store.pipe(select(fromStore.selectorCountEdicts));
+      //this.countEdictTypes$ = this.store.pipe(select(fromStore.selectorEdictsTypesCount));
     
     // this.edictService.filterEdicts(this.selectedExecutorFilter, this.searchValue).pipe(
     //   takeUntil(this.unSubscribe)

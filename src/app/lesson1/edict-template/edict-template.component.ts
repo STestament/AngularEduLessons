@@ -131,7 +131,14 @@ export class EdictTemplateComponent implements OnInit {
     this.setDefaultDataAndClose.emit();
   }
   saveTemplate() {
-    this.sendEdictToSave.emit(this.templateEdictData);
+    if (this.templateEdictData.id == -1) {
+      let newIndex = this.edicts[this.edicts.length-1].id;
+      this.templateEdictData.id = ++newIndex;
+      this.store.dispatch(fromStore.editEdict({editEdict: this.templateEdictData}));
+    } else {
+      this.store.dispatch(fromStore.editEdict({editEdict: this.templateEdictData}));
+    }    
+    //this.sendEdictToSave.emit(this.templateEdictData);
   }
 
   showTemplateForm(isVisible: boolean, title: string) {
