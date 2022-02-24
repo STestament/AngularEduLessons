@@ -20,8 +20,10 @@
             {{loginName}} 
         </div>        
     </div>
+    <div>Кол-во указов: {{count$ | async}}</div>
+    <div *ngFor="let item of countEdictTypes$ | async">Кол-во указов по типу {{item.executorType}}: {{item.count}}</div> 
     <div class="listOfEdict">
-        <app-edict *ngFor="let edict of edicts" #edict
+        <app-edict *ngFor="let edict of edicts$ | async" #edict
             [singleEdictData]="edict | uppercasetitlePipe" 
             (contextmenu)="openInnerMenu($event)"
             (click)="closeInnerMenu()"
@@ -31,13 +33,7 @@
         </app-edict>
     </div>
     <div class="templateItem">
-        <app-template-form #templateForm>
-            <app-edict-template #templateEdict
-                [edictTemplateData]="templateEdictItem" 
-                (sendEdictToSave)="saveEdictToList($event)" 
-                (setDefaultDataAndClose)="setDefaultDataAndCloseTemplate()">                
-            </app-edict-template>
-        </app-template-form>
+        <router-outlet></router-outlet>
     </div>
     <app-inner-menu *ngIf="isVisibleInnerMenu" [x]="xMenu" [y]="yMenu" 
         (selectAllEdict)="selectAllEdict()">

@@ -7,6 +7,11 @@ export type edictItem = {
     executedPerson: executedPerson    
 }
 
+export type countTypes = {
+    executorType: string,
+    count: number
+}
+
 export enum executedPerson {
     Unassigned = "Unassigned",
     CityBuilder = "CityBuilder",

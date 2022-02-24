@@ -40,7 +40,9 @@ UsersService {
 
   public saveChanges(changedUser: UserType) {
     let params = {
-      params: new HttpParams().set('loginName', changedUser.login).set('firstName', changedUser.firstName).set('surName', changedUser.surName)
+      params: new HttpParams().set('loginName', changedUser.login)
+        .set('firstName', changedUser.firstName)
+        .set('surName', changedUser.surName)
     }
     this.httpClient.get('https://localhost:5001/User/SaveDataUser', params)
       .subscribe({
