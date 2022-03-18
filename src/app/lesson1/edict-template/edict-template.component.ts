@@ -6,6 +6,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { EdictsService } from 'src/app/lessonServices/edicts.service';
 import { edictItem, executedPerson } from '../classStore';
 import { notEmpty, notLessThanSix } from '../validator/customValidator';
+import { Store } from '@ngrx/store';
+import * as fromStore from '../../store';
 
 type paramsRequest = {
   edictId: number;
@@ -25,6 +27,14 @@ export class EdictTemplateComponent implements OnInit {
   private edicts: edictItem[] = []; 
   private edictId: number = -1;
   private unSubscribe: Subject<void> = new Subject();
+  private localEdictDataTemplate = {
+    id: -1, 
+    header: "", 
+    description: "", 
+    dayOfComplete: 10, 
+    isSelectEdictState: false,
+    executedPerson: executedPerson.Unassigned
+  }
 
   templateForm!: FormGroup;
   get edictName(): FormControl {
@@ -42,7 +52,8 @@ export class EdictTemplateComponent implements OnInit {
   
   constructor(private cdr: ChangeDetectorRef, private fb: FormBuilder,
     private edictsService: EdictsService,
-    private route: ActivatedRoute, private router: Router) { }
+    private route: ActivatedRoute, private router: Router,
+    private store: Store<fromStore.State>) { }
 
   ngOnInit(): void {    
     this.edictsService.getEdictsAsOberverble().pipe(
@@ -68,11 +79,13 @@ export class EdictTemplateComponent implements OnInit {
         this.setDataToTemplateAndSetVisible();
       }
     );    
+    
   }
 
   public setDataToTemplateAndSetVisible() {
     if (this.edictId === -1) {
       this.setDefaultTemplateData();
+      this.setLocalDefaultTemplateData();
       this.SetFormValue();
       this.isVisibleTemplate = true;
       this.cdr.markForCheck();
@@ -81,6 +94,7 @@ export class EdictTemplateComponent implements OnInit {
       let edict = this.edicts.find((item) => item.id == this.edictId);
       if (edict) {                
         this.templateEdictData = edict;
+        this.setLocalDefaultTemplateData();
         this.SetFormValue();
         this.isVisibleTemplate = true;
         this.cdr.markForCheck();
@@ -112,6 +126,16 @@ export class EdictTemplateComponent implements OnInit {
       executedPerson: executedPerson.Unassigned
     }
   }
+  setLocalDefaultTemplateData() {
+    this.localEdictDataTemplate = {
+      id: this.templateEdictData.id, 
+      header: this.templateEdictData.header, 
+      description: this.templateEdictData.description, 
+      dayOfComplete: this.templateEdictData.dayOfComplete, 
+      isSelectEdictState: false,
+      executedPerson: this.templateEdictData.executedPerson
+    }
+  }
 
   // Установка данных при открытии шаблона редактирования
   private setValuesToControl(templateData: edictItem) {
@@ -127,8 +151,25 @@ export class EdictTemplateComponent implements OnInit {
     this.templateForm.reset();
     this.setDefaultDataAndClose.emit();
   }
+  // saveTemplate() {
+  //   if (this.templateEdictData.id == -1) {
+  //     let newIndex = this.edicts[this.edicts.length-1].id;
+  //     this.templateEdictData.id = ++newIndex;
+  //     this.store.dispatch(fromStore.editEdict({editEdict: this.templateEdictData}));
+  //   } else {
+  //     this.store.dispatch(fromStore.editEdict({editEdict: this.templateEdictData}));
+  //   }    
+  //   //this.sendEdictToSave.emit(this.templateEdictData);
+  // }
   saveTemplate() {
-    this.sendEdictToSave.emit(this.templateEdictData);
+    if (this.localEdictDataTemplate.id == -1) {
+      let newIndex = this.edicts[this.edicts.length-1].id;
+      this.localEdictDataTemplate.id = ++newIndex;
+      this.store.dispatch(fromStore.editEdict({editEdict: this.localEdictDataTemplate}));
+    } else {
+      this.store.dispatch(fromStore.editEdict({editEdict: this.localEdictDataTemplate}));
+    }    
+    //this.sendEdictToSave.emit(this.templateEdictData);
   }
 
   showTemplateForm(isVisible: boolean, title: string) {
@@ -139,17 +180,29 @@ export class EdictTemplateComponent implements OnInit {
 
   // Установка значений
   public changeHeader = (value: string) => { 
-    this.templateEdictData.header = value; 
+    this.localEdictDataTemplate.header = value; 
   }
   public changeDescription = (value: string) => { 
-    this.templateEdictData.description = value; 
+    this.localEdictDataTemplate.description = value; 
   }
   public changeDays = (value: string) => { 
-    this.templateEdictData.dayOfComplete = +value; 
+    this.localEdictDataTemplate.dayOfComplete = +value; 
   }
   public selectExecutor(executor: string) {
-    this.templateEdictData.executedPerson = executor as executedPerson;
+    this.localEdictDataTemplate.executedPerson = executor as executedPerson;
   }
+  // public changeHeader = (value: string) => { 
+  //   this.templateEdictData.header = value; 
+  // }
+  // public changeDescription = (value: string) => { 
+  //   this.templateEdictData.description = value; 
+  // }
+  // public changeDays = (value: string) => { 
+  //   this.templateEdictData.dayOfComplete = +value; 
+  // }
+  // public selectExecutor(executor: string) {
+  //   this.templateEdictData.executedPerson = executor as executedPerson;
+  // }
 
   ngOnDestroy() {
     this.unSubscribe.complete();

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, QueryList, SimpleChanges, ViewChild, ViewChildren } from '@angular/core';
-import { edictItem, executedPerson } from '../classStore';
+import { edictItem, executedPerson, countTypes } from '../classStore';
 import { EdictComponent } from '../edict/edict.component';
 import { TemplateFormComponent } from '../template-form/template-form.component';
 import { EdictsService } from 'src/app/lessonServices/edicts.service';
@@ -12,6 +12,8 @@ import { distinctUntilChanged } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { switchMap } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { select, Store } from '@ngrx/store';
+import * as fromStore from '../../store';
 
 @Component({
   selector: 'app-edict-list',
@@ -38,7 +40,12 @@ export class EdictListComponent implements OnInit {
   public xMenu = 0;
   public yMenu = 0;
   // Данные
-  public edicts: edictItem[] = [];
+  // public edicts: edictItem[] = [];
+  
+  public edicts$: Observable<edictItem[]> | undefined;
+  public count$: Observable<number> | undefined;
+  public countEdictTypes$: Observable<countTypes[]> | undefined;
+
   public templateEdictItem: edictItem = {
     id: this.stateIndex, 
     header: "", 
@@ -59,8 +66,14 @@ export class EdictListComponent implements OnInit {
               private userService: UsersService,
               private router: Router, 
               private route: ActivatedRoute,
-              private cdr: ChangeDetectorRef) { 
-                
+              private cdr: ChangeDetectorRef,
+              private store: Store<fromStore.State>) { 
+
+                this.store.dispatch(fromStore.loadEdicts());
+
+                this.edicts$ = this.store.pipe(select(fromStore.selectorEdicts));
+                this.count$ = this.store.pipe(select(fromStore.selectorCountEdicts));
+                this.countEdictTypes$ = this.store.pipe(select(fromStore.selectorEdictsTypesCount));        
   }
 
   ngOnInit(): void { 
@@ -73,9 +86,9 @@ export class EdictListComponent implements OnInit {
         this.searchValue = params['text'] ?? "";
       }
     );
-
+    // поиск
     this.searchControl = new FormControl(this.searchValue);
-    this.searchControl.valueChanges
+    /*this.searchControl.valueChanges
     .pipe(
       debounceTime(3000),
       distinctUntilChanged((previousValue: string, currentValue: string) => previousValue === currentValue),
@@ -92,19 +105,35 @@ export class EdictListComponent implements OnInit {
       },
       error: (e) => { console.log(e.message); },
       complete: () => { console.log('Данные по фильтру получены'); } 
-    });
+    });*/
+    
+    // получение данных
+    // this.edictService
+    // .filterEdicts(this.selectedExecutorFilter, this.searchValue)
+    // .pipe(
+    //   takeUntil(this.unSubscribe)
+    //   )
+    //   //.subscribe(results => this.store.dispatch(fromStore.loadEdictsSuccess(results))      )
+    //   .subscribe(results => this.store.dispatch(fromStore.loadEdictsSuccess({edicts: results})));
 
 
-    this.edictService.filterEdicts(this.selectedExecutorFilter, this.searchValue).pipe(
-      takeUntil(this.unSubscribe)
-    ).subscribe({
-      next: (data) => {
-        this.edicts = data;
-        this.cdr.markForCheck();
-      },
-      error: (e) => { console.log(e.message); },
-      complete: () => { console.log('Данные получены'); } 
-    });     
+      //this.store.dispatch(fromStore.loadEdicts());
+      // this.edicts$ = this.store.pipe(select(state => state.edictObjects.edicts));
+      // this.count$ = this.store.pipe(select(state => state.edictObjects.edicts?.length));
+      //this.edicts$ = this.store.pipe(select(fromStore.selectorEdicts));
+      //this.count$ = this.store.pipe(select(fromStore.selectorCountEdicts));
+      //this.countEdictTypes$ = this.store.pipe(select(fromStore.selectorEdictsTypesCount));
+    
+    // this.edictService.filterEdicts(this.selectedExecutorFilter, this.searchValue).pipe(
+    //   takeUntil(this.unSubscribe)
+    // ).subscribe({
+    //   next: (data) => {
+    //     this.edicts = data;
+    //     this.cdr.markForCheck();
+    //   },
+    //   error: (e) => { console.log(e.message); },
+    //   complete: () => { console.log('Данные получены'); } 
+    // });     
   }
 
   ngAfterViewInit() {
@@ -134,12 +163,12 @@ export class EdictListComponent implements OnInit {
   }
   selectEdict() {  
     this.isAnyEdictSelected = false;
-    this.edicts.forEach(edicts => {
-      if (edicts.isSelectEdictState) {
-        this.isAnyEdictSelected = true;
-        return;
-      }
-    });
+    // this.edicts.forEach(edicts => {
+    //   if (edicts.isSelectEdictState) {
+    //     this.isAnyEdictSelected = true;
+    //     return;
+    //   }
+    // });
   }
   // Работа с модальной формой  
   openTemplateForEdit(edict: edictItem) {  
@@ -165,21 +194,22 @@ export class EdictListComponent implements OnInit {
     this.isVisibleInnerMenu = false;
   }
   selectAllEdict() {    
-    this.edicts.forEach(edict => {
-      edict.isSelectEdictState = true
-    });
+    // this.edicts.forEach(edict => {
+    //   edict.isSelectEdictState = true
+    // });
     this.isAnyEdictSelected = true;
     this.isVisibleInnerMenu = false;
     this.edictList.forEach(x => x.checkEdict());
   }
   // Операции с массивом данным
   saveEdictToList($event: edictItem) {
-    let edict = this.edicts.find(item => item.id == $event.id);
-    if (edict) {
-      this.edictService.updateEdict($event);
-    } else {
-      this.edictService.addEdict($event);
-    }
+    // let edict = this.edicts.find(item => item.id == $event.id);
+    // if (edict) {
+    //   this.edictService.updateEdict($event);
+    // } else {
+    //   this.edictService.addEdict($event);
+    // }
+    this.store.dispatch(fromStore.editEdict({editEdict: $event}));
     this.templateEdict.closeTemplate();
     this.edictList.forEach(x => x.checkEdict());
     this.setDefaultTemplateData();
@@ -189,11 +219,11 @@ export class EdictListComponent implements OnInit {
   }
   deleteAllSelectedEdict() {
     let renewEdictList: edictItem[] = [];
-    this.edicts.forEach(edict => { 
-      if (!edict.isSelectEdictState) {
-        renewEdictList.push(edict);
-      }
-    });
+    // this.edicts.forEach(edict => { 
+    //   if (!edict.isSelectEdictState) {
+    //     renewEdictList.push(edict);
+    //   }
+    // });
     this.edictService.removeEdicts(renewEdictList);
     this.isAnyEdictSelected = false;
   }

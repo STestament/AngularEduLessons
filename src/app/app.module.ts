@@ -21,6 +21,10 @@ import { ProfileComponent } from './lesson1/profile/profile.component';
 import { LoginFormComponent } from './lesson1/login-form/login-form.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './store';
+import { EffectsModule } from '@ngrx/effects';
+import { effects } from './store/effects/index';
 
 @NgModule({
   declarations: [
@@ -46,7 +50,9 @@ import { FooterComponent } from './footer/footer.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot(effects)
   ],
   providers: [ 
     {
